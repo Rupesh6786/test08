@@ -54,12 +54,11 @@ export default function RegisterPage() {
       });
 
       toast({
-        title: 'Success!',
-        description: 'Your account has been created. Please log in.',
-        variant: 'default',
+        title: 'Welcome to BattleBucks!',
+        description: 'Your account has been successfully created.',
       });
 
-      router.push('/login');
+      router.push('/');
 
     } catch (error: any) {
       console.error("Registration failed:", error);
