@@ -18,7 +18,7 @@ export function TournamentCard({ tournament }: TournamentCardProps) {
   const slotsLeft = tournament.slotsTotal - slotsAllotted;
 
   return (
-    <Card className="bg-card/80 backdrop-blur-sm border-border/50 overflow-hidden transform transition-all duration-300 hover:scale-105 hover:-translate-y-2 hover:shadow-lg hover:shadow-primary/20 hover:border-primary/50" style={{ transformStyle: 'preserve-3d' }}>
+    <Card className="w-full max-w-sm bg-card/80 backdrop-blur-sm border-border/50 overflow-hidden transform transition-all duration-300 hover:scale-105 hover:-translate-y-2 hover:shadow-lg hover:shadow-primary/20 hover:border-primary/50" style={{ transformStyle: 'preserve-3d' }}>
       <CardHeader className="p-4">
         <div className="flex justify-between items-start">
             <CardTitle className="font-headline text-lg tracking-wide">{tournament.title}</CardTitle>

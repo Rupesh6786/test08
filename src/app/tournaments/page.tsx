@@ -38,9 +38,13 @@ export default function TournamentsPage() {
   const ongoing = tournaments.filter(t => t.status === 'Ongoing');
 
   const renderSkeletons = (count: number) => (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-8">
+    <div className="mt-8 flex flex-wrap justify-center gap-6">
       {Array.from({ length: count }).map((_, i) => (
-        <Card key={i}><CardContent className="p-4"><Skeleton className="h-[300px] w-full" /></CardContent></Card>
+        <Card key={i} className="w-full max-w-sm">
+            <CardContent className="p-4">
+                <Skeleton className="h-[300px] w-full" />
+            </CardContent>
+        </Card>
       ))}
     </div>
   );
@@ -64,28 +68,28 @@ export default function TournamentsPage() {
               </TabsList>
               <TabsContent value="upcoming">
                 {isLoading ? renderSkeletons(4) : (
-                  <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-8">
-                    {upcoming.length > 0 ? (
-                      upcoming.map((tournament) => (
+                  upcoming.length > 0 ? (
+                    <div className="mt-8 flex flex-wrap justify-center gap-6">
+                      {upcoming.map((tournament) => (
                         <TournamentCard key={tournament.id} tournament={tournament} />
-                      ))
-                    ) : (
-                      <p className="col-span-full text-center text-muted-foreground">No upcoming tournaments found.</p>
-                    )}
-                  </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="mt-8 text-center text-muted-foreground">No upcoming tournaments found.</p>
+                  )
                 )}
               </TabsContent>
               <TabsContent value="ongoing">
-                {isLoading ? renderSkeletons(2) : (
-                  <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-8">
-                    {ongoing.length > 0 ? (
-                      ongoing.map((tournament) => (
+                 {isLoading ? renderSkeletons(2) : (
+                  ongoing.length > 0 ? (
+                    <div className="mt-8 flex flex-wrap justify-center gap-6">
+                      {ongoing.map((tournament) => (
                         <TournamentCard key={tournament.id} tournament={tournament} />
-                      ))
-                    ) : (
-                       <p className="col-span-full text-center text-muted-foreground">No ongoing tournaments right now.</p>
-                    )}
-                  </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="mt-8 text-center text-muted-foreground">No ongoing tournaments right now.</p>
+                  )
                 )}
               </TabsContent>
             </Tabs>
