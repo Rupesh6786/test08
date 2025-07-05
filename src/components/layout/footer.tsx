@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import { Youtube, Twitter, Instagram, Facebook, Heart } from 'lucide-react';
 
@@ -24,9 +25,9 @@ export function Footer() {
           <div>
             <h3 className="font-headline text-lg font-bold text-primary">Legal</h3>
             <ul className="mt-2 space-y-1 text-sm">
-              <li><Link href="#" className="text-muted-foreground hover:text-primary">Terms</Link></li>
-              <li><Link href="#" className="text-muted-foreground hover:text-primary">Privacy</Link></li>
-              <li><Link href="#" className="text-muted-foreground hover:text-primary">Refund</Link></li>
+              <li><Link href="/terms" className="text-muted-foreground hover:text-primary">Terms</Link></li>
+              <li><Link href="/privacy" className="text-muted-foreground hover:text-primary">Privacy</Link></li>
+              <li><Link href="/refund" className="text-muted-foreground hover:text-primary">Refund</Link></li>
             </ul>
           </div>
           <div>
