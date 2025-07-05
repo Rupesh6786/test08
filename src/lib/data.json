@@ -1,0 +1,9 @@
+{
+  "leaderboard": [
+    { "rank": 1, "username": "SniperQueen", "gameId": "5123456789", "totalWinnings": 12500 },
+    { "rank": 2, "username": "ClutchGod", "gameId": "5987654321", "totalWinnings": 9800 },
+    { "rank": 3, "username": "GamerXpert", "gameId": "5234567890", "totalWinnings": 7200 },
+    { "rank": 4, "username": "RushHour", "gameId": "5345678901", "totalWinnings": 5500 },
+    { "rank": 5, "username": "ShadowStrike", "gameId": "5456789012", "totalWinnings": 4100 }
+  ]
+}
