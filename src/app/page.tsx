@@ -45,7 +45,7 @@ function HeroSection() {
           priority
         />
       </div>
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
+      <div className="absolute inset-0 dark:bg-gradient-to-t dark:from-background dark:via-background/50 dark:to-transparent" />
       <div className="relative z-10 flex h-full flex-col items-center justify-end pb-20 text-center sm:pb-28">
         <h1 className="font-headline text-4xl font-bold uppercase tracking-wider text-primary text-shadow-primary sm:text-5xl md:text-6xl lg:text-7xl">
           BattleBucks
