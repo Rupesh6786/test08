@@ -35,11 +35,21 @@ export default function Home() {
 function HeroSection() {
   return (
     <section className="relative h-[90vh] min-h-[600px] w-full overflow-hidden">
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 hidden md:block">
         <Image
           src="/img/player-waking_hero_section.png"
           alt="Hiker walking towards an erupting volcano"
           data-ai-hint="volcano hiker"
+          fill
+          className="object-cover"
+          priority
+        />
+      </div>
+       <div className="absolute inset-0 z-0 md:hidden">
+        <Image
+          src="/img/mobile_responsive_hero_section.png"
+          alt="Mobile gamer"
+          data-ai-hint="mobile gamer"
           fill
           className="object-cover"
           priority
