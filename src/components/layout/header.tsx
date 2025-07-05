@@ -18,6 +18,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useRouter } from 'next/navigation';
 import { ThemeToggle } from '../theme-toggle';
+import { cn } from '@/lib/utils';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -109,26 +110,48 @@ export function Header() {
           </Button>
         </div>
       </div>
-      {isMenuOpen && (
-        <div className="md:hidden bg-background/90 border-t border-border/40">
-          <nav className="flex flex-col items-center space-y-4 py-6">
-            {navLinks.map((link) => (
-              <Link key={link.href} href={link.href} className="text-lg transition-colors hover:text-primary" onClick={() => setIsMenuOpen(false)}>
-                {link.label}
-              </Link>
-            ))}
-             {authUser ? (
-               <Button onClick={() => { handleLogout(); setIsMenuOpen(false); }} variant="outline" className="border-accent text-accent hover:bg-accent hover:text-accent-foreground">
-                 Log Out
-               </Button>
-             ) : (
-                <Button asChild variant="outline" className="border-accent text-accent hover:bg-accent hover:text-accent-foreground" onClick={() => setIsMenuOpen(false)}>
-                  <Link href="/login">Login / Register</Link>
-                </Button>
-             )}
-          </nav>
-        </div>
-      )}
+      <div
+        className={cn(
+          'md:hidden absolute top-full left-0 w-full bg-background/95 backdrop-blur-sm shadow-md transition-all duration-300 ease-in-out origin-top',
+          isMenuOpen
+            ? 'transform scale-y-100 opacity-100'
+            : 'transform scale-y-0 opacity-0 pointer-events-none'
+        )}
+      >
+        <nav className="flex flex-col items-center space-y-4 py-6">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="text-lg transition-colors hover:text-primary"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              {link.label}
+            </Link>
+          ))}
+          {authUser ? (
+            <Button
+              onClick={() => {
+                handleLogout();
+                setIsMenuOpen(false);
+              }}
+              variant="outline"
+              className="border-accent text-accent hover:bg-accent hover:text-accent-foreground"
+            >
+              Log Out
+            </Button>
+          ) : (
+            <Button
+              asChild
+              variant="outline"
+              className="border-accent text-accent hover:bg-accent hover:text-accent-foreground"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <Link href="/login">Login / Register</Link>
+            </Button>
+          )}
+        </nav>
+      </div>
     </header>
   );
 }
