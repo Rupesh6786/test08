@@ -42,6 +42,7 @@ function HeroSection() {
           data-ai-hint="volcano hiker"
           fill
           className="object-cover"
+          priority
         />
       </div>
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
