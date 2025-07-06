@@ -26,7 +26,7 @@ function AdminSidebar({ onLogout }: { onLogout: () => Promise<void> }) {
     }
     
     return (
-        <Sidebar>
+        <Sidebar side="right">
             <SidebarHeader>
                 <h2 className="text-xl font-bold text-primary px-4">BattleBucks</h2>
             </SidebarHeader>
@@ -122,13 +122,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <AdminSidebar onLogout={handleLogout} />
             <div className="flex flex-1 flex-col">
                 <header className="flex h-14 items-center justify-between gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 lg:h-[60px] lg:px-6 sticky top-0 z-30">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 md:hidden">
+                        <SidebarTrigger />
+                    </div>
+                    <div className="hidden md:flex items-center gap-2">
                         <h1 className="text-lg font-bold text-primary">Admin Panel</h1>
                     </div>
                     <div className="flex items-center gap-2">
                         <span className="text-sm text-muted-foreground hidden md:inline">Welcome, Admin!</span>
                         <ThemeToggle />
-                        <SidebarTrigger className="md:hidden" />
+                        <SidebarTrigger className="hidden md:flex" />
                     </div>
                 </header>
                 <main className="flex-1 p-4 md:p-8 overflow-auto bg-muted/40">
