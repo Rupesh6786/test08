@@ -1,3 +1,6 @@
+
+"use client";
+
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import {
@@ -9,57 +12,19 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent } from '@/components/ui/card';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
 import { leaderboard } from '@/lib/data.json';
 import type { LeaderboardEntry } from '@/lib/data';
-import { Trophy, Award, Medal, Gamepad2, Percent, Flame, Shield, CalendarDays, Twitter, Instagram } from 'lucide-react';
+import { Trophy, Award, Medal, Flame } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 
-
-function PlayerHoverCard({ player }: { player: LeaderboardEntry }) {
-  return (
-    <div className="flex flex-col gap-4 p-4">
-      <div className="flex items-center gap-4">
-        <Image
-          src={player.avatar}
-          alt={player.username}
-          width={56}
-          height={56}
-          className="rounded-full border-2 border-primary"
-        />
-        <div>
-          <h3 className="font-bold text-lg text-foreground">{player.username}</h3>
-          <p className="text-sm text-muted-foreground">{player.clanName}</p>
-        </div>
-      </div>
-      <p className="text-sm text-muted-foreground italic">"{player.bio}"</p>
-      {(player.socialLinks.twitter || player.socialLinks.instagram) && (
-          <div className="flex items-center gap-4 pt-2 border-t border-border/50">
-             {player.socialLinks.twitter && (
-                <Link href={player.socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary">
-                    <Twitter className="w-5 h-5" />
-                </Link>
-             )}
-             {player.socialLinks.instagram && (
-                <Link href={player.socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary">
-                    <Instagram className="w-5 h-5" />
-                </Link>
-             )}
-          </div>
-      )}
-    </div>
-  )
-}
 
 export default function LeaderboardPage() {
+  const router = useRouter();
+
   const getRankIcon = (rank: number) => {
     const iconBaseClass = "w-6 h-6";
     if (rank === 1) return <Trophy className={cn(iconBaseClass, "text-yellow-400 rank-gold-glow")} />;
@@ -78,7 +43,6 @@ export default function LeaderboardPage() {
       <Header />
       <main className="flex-1">
         <section className="py-16 md:py-24">
-          <TooltipProvider>
             <div className="container mx-auto px-4">
               <div className="text-center mb-12">
                 <h1 className="font-headline text-4xl md:text-5xl font-bold uppercase tracking-wider text-primary text-shadow-primary">
@@ -106,24 +70,21 @@ export default function LeaderboardPage() {
                             </TableHeader>
                             <TableBody>
                                 {(leaderboard as LeaderboardEntry[]).map((entry) => (
-                                <TableRow key={entry.rank} className="font-medium hover:bg-primary/10">
+                                <TableRow 
+                                    key={entry.rank} 
+                                    className="font-medium hover:bg-primary/10 cursor-pointer"
+                                    onClick={() => router.push(`/players/${encodeURIComponent(entry.username)}`)}
+                                >
                                     <TableCell className="text-center">
                                         <div className="flex justify-center items-center h-full">
                                             {getRankIcon(entry.rank)}
                                         </div>
                                     </TableCell>
                                     <TableCell className="text-lg text-foreground">
-                                      <Tooltip delayDuration={100}>
-                                        <TooltipTrigger asChild>
-                                          <div className="flex items-center gap-3 cursor-default">
+                                          <div className="flex items-center gap-3">
                                             <Image src={entry.avatar} alt={entry.username} width={40} height={40} className="rounded-full" />
                                             <span>{entry.username}</span>
                                           </div>
-                                        </TooltipTrigger>
-                                        <TooltipContent className="bg-card/90 backdrop-blur-sm p-0 border-accent shadow-accent/20 shadow-lg">
-                                          <PlayerHoverCard player={entry} />
-                                        </TooltipContent>
-                                      </Tooltip>
                                     </TableCell>
                                     <TableCell className="text-center font-mono">{entry.gamesPlayed}</TableCell>
                                     <TableCell className="text-center hidden lg:table-cell font-mono">{calculateWinRate(entry.wins, entry.gamesPlayed)}</TableCell>
@@ -144,9 +105,8 @@ export default function LeaderboardPage() {
               {/* Mobile View */}
               <div className="space-y-4 md:hidden">
                 {(leaderboard as LeaderboardEntry[]).map((entry) => (
-                  <Tooltip key={entry.rank} delayDuration={100}>
-                    <TooltipTrigger asChild>
-                      <Card className="bg-card/80 backdrop-blur-sm border-border/50 text-left w-full">
+                  <Link key={entry.rank} href={`/players/${encodeURIComponent(entry.username)}`} className="block">
+                      <Card className="bg-card/80 backdrop-blur-sm border-border/50 text-left w-full active:scale-95 transition-transform duration-150">
                         <CardContent className="p-4">
                             <div className="flex items-center justify-between gap-4 mb-4">
                                 <div className="flex items-center gap-3">
@@ -180,16 +140,11 @@ export default function LeaderboardPage() {
                             </div>
                         </CardContent>
                       </Card>
-                    </TooltipTrigger>
-                    <TooltipContent className="bg-card/90 backdrop-blur-sm p-0 border-accent shadow-accent/20 shadow-lg w-[calc(100vw-2rem)] max-w-sm">
-                      <PlayerHoverCard player={entry} />
-                    </TooltipContent>
-                  </Tooltip>
+                  </Link>
                 ))}
               </div>
 
             </div>
-          </TooltipProvider>
         </section>
       </main>
       <Footer />
