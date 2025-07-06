@@ -1,10 +1,10 @@
+
 "use client";
 
 import { useEffect, useState, useRef } from 'react';
-import { auth, db, storage } from '@/lib/firebase';
+import { auth, db } from '@/lib/firebase';
 import { onAuthStateChanged, type User, updateProfile } from 'firebase/auth';
-import { doc, getDoc, collection, query, where, getDocs, updateDoc, serverTimestamp } from 'firebase/firestore';
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { doc, getDoc, collection, query, where, getDocs, updateDoc } from 'firebase/firestore';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useForm, type SubmitHandler } from 'react-hook-form';
@@ -16,7 +16,6 @@ import { Loader2, History, Camera, Users, Gamepad2, PenSquare } from 'lucide-rea
 import { Badge } from '@/components/ui/badge';
 import type { UserProfileData, UserRegistration } from '@/lib/data';
 import { Button } from './ui/button';
-import { Progress } from './ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import { Input } from './ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -51,7 +50,6 @@ export function UserProfile() {
     const [registrations, setRegistrations] = useState<UserRegistration[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isUploading, setIsUploading] = useState(false);
-    const [uploadProgress, setUploadProgress] = useState(0);
     const [isEditing, setIsEditing] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -121,34 +119,39 @@ export function UserProfile() {
         }
     };
 
-    const handleImageUpload = (file: File, user: User) => {
+    const handleImageUpload = async (file: File, user: User) => {
         setIsUploading(true);
-        const storageRef = ref(storage, `avatars/${user.uid}`);
-        const uploadTask = uploadBytesResumable(storageRef, file);
+        const formData = new FormData();
+        formData.append('file', file);
 
-        uploadTask.on('state_changed',
-            (snapshot) => {
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                setUploadProgress(progress);
-            },
-            (error) => {
-                console.error("Upload failed:", error);
-                toast({ title: "Upload Failed", description: "Could not upload your image. Please try again.", variant: "destructive" });
-                setIsUploading(false);
-            },
-            async () => {
-                const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                await updateProfile(user, { photoURL: downloadURL });
-                await updateDoc(doc(db, 'users', user.uid), { photoURL: downloadURL });
-                
-                setProfile(prev => prev ? { ...prev, photoURL: downloadURL } : null);
-                
-                toast({ title: "Success", description: "Profile picture updated!" });
-                setIsUploading(false);
-                setUploadProgress(0);
+        try {
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Upload failed');
             }
-        );
+
+            const { path: downloadURL } = await response.json();
+
+            await updateProfile(user, { photoURL: downloadURL });
+            await updateDoc(doc(db, 'users', user.uid), { photoURL: downloadURL });
+
+            setProfile(prev => prev ? { ...prev, photoURL: downloadURL } : null);
+
+            toast({ title: "Success", description: "Profile picture updated!" });
+        } catch (error) {
+            console.error("Upload failed:", error);
+            const errorMessage = error instanceof Error ? error.message : "Could not upload your image. Please try again.";
+            toast({ title: "Upload Failed", description: errorMessage, variant: "destructive" });
+        } finally {
+            setIsUploading(false);
+        }
     };
+
 
     const handleProfileUpdate: SubmitHandler<ProfileFormValues> = async (data) => {
         if (!authUser) return;
@@ -215,16 +218,15 @@ export function UserProfile() {
                             className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                             onClick={() => fileInputRef.current?.click()}
                         >
-                        {!isUploading && (
+                        {!isUploading ? (
                             <>
                                 <Camera className="w-12 h-12 text-white" />
                                 <p className="text-white font-bold mt-2">Change Picture</p>
                             </>
-                        )}
-                        {isUploading && (
-                            <div className="w-3/4 text-center">
-                                <Progress value={uploadProgress} className="h-2 bg-white/30" indicatorClassName="bg-primary" />
-                                <p className="text-white text-sm mt-2">Uploading... {Math.round(uploadProgress)}%</p>
+                        ) : (
+                            <div className="w-3/4 text-center flex flex-col items-center justify-center">
+                               <Loader2 className="w-8 h-8 text-white animate-spin" />
+                               <p className="text-white text-sm mt-2">Uploading...</p>
                             </div>
                         )}
                         </div>
