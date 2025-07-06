@@ -46,6 +46,7 @@ export type UserProfileData = {
     gameId: string;
     teamName: string;
     status: 'active' | 'banned';
+    photoURL?: string;
 };
 
 export type UserRegistration = {
