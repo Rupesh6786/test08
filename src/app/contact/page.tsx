@@ -81,6 +81,30 @@ export default function ContactPage() {
                         <p className="text-lg text-muted-foreground mt-2">Have questions? We'd love to hear from you.</p>
                     </div>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                         <div className="space-y-8">
+                            <h2 className="text-2xl font-bold text-accent">Other Ways to Reach Us</h2>
+                            <p className="text-muted-foreground">
+                                For immediate assistance or partnership opportunities, feel free to reach out through the following channels.
+                            </p>
+                             <Card className="bg-card/80 backdrop-blur-sm border-border/50">
+                                <CardContent className="p-6 flex items-center gap-4">
+                                    <Mail className="w-8 h-8 text-primary"/>
+                                    <div>
+                                        <h3 className="font-bold">Email Us</h3>
+                                        <a href="mailto:22rupeshthakur@gmail.com" className="text-muted-foreground hover:text-primary">22rupeshthakur@gmail.com</a>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                             <Card className="bg-card/80 backdrop-blur-sm border-border/50">
+                                <CardContent className="p-6 flex items-center gap-4">
+                                    <Phone className="w-8 h-8 text-primary"/>
+                                    <div>
+                                        <h3 className="font-bold">Call Us</h3>
+                                        <p className="text-muted-foreground">+91 9321738137</p>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </div>
                         <Card className="bg-card/80 backdrop-blur-sm border-border/50">
                             <CardContent className="p-8">
                                 <h2 className="text-2xl font-bold mb-6 text-accent">Send a Message</h2>
@@ -127,30 +151,6 @@ export default function ContactPage() {
                                 </Form>
                             </CardContent>
                         </Card>
-                         <div className="space-y-8">
-                            <h2 className="text-2xl font-bold text-accent">Other Ways to Reach Us</h2>
-                            <p className="text-muted-foreground">
-                                For immediate assistance or partnership opportunities, feel free to reach out through the following channels.
-                            </p>
-                             <Card className="bg-card/80 backdrop-blur-sm border-border/50">
-                                <CardContent className="p-6 flex items-center gap-4">
-                                    <Mail className="w-8 h-8 text-primary"/>
-                                    <div>
-                                        <h3 className="font-bold">Email Us</h3>
-                                        <a href="mailto:22rupeshthakur@gmail.com" className="text-muted-foreground hover:text-primary">22rupeshthakur@gmail.com</a>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                             <Card className="bg-card/80 backdrop-blur-sm border-border/50">
-                                <CardContent className="p-6 flex items-center gap-4">
-                                    <Phone className="w-8 h-8 text-primary"/>
-                                    <div>
-                                        <h3 className="font-bold">Call Us</h3>
-                                        <p className="text-muted-foreground">+91 9321738137</p>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </div>
                     </div>
                 </div>
             </main>
