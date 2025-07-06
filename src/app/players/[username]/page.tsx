@@ -1,6 +1,6 @@
 "use client";
 
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Header } from '@/components/layout/header';
@@ -13,8 +13,9 @@ import { db } from '@/lib/firebase';
 import { collection, query, where, getDocs, limit } from 'firebase/firestore';
 import { useState, useEffect } from 'react';
 
-export default function PlayerProfilePage({ params }: { params: { username: string } }) {
-  const { username: encodedUsername } = params;
+export default function PlayerProfilePage() {
+  const params = useParams<{ username: string }>();
+  const encodedUsername = params.username;
   const [player, setPlayer] = useState<UserProfileData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -42,7 +43,8 @@ export default function PlayerProfilePage({ params }: { params: { username: stri
     };
     
     if (encodedUsername) {
-        const username = decodeURIComponent(encodedUsername as string);
+        const usernameToFetch = Array.isArray(encodedUsername) ? encodedUsername[0] : encodedUsername;
+        const username = decodeURIComponent(usernameToFetch);
         fetchPlayer(username);
     }
   }, [encodedUsername]);
