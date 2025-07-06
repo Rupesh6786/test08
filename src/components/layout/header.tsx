@@ -24,7 +24,6 @@ const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/tournaments', label: 'Tournaments' },
   { href: '/community', label: 'Community' },
-  { href: '#', label: 'Media' },
 ];
 
 export function Header() {
