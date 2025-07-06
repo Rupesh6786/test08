@@ -91,9 +91,6 @@ export function Header() {
                  <DropdownMenuItem asChild>
                     <Link href="/profile">Profile</Link>
                 </DropdownMenuItem>
-                 <DropdownMenuItem asChild>
-                    <Link href="/leaderboard">Leaderboard</Link>
-                </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleLogout}>
                   Log out
                 </DropdownMenuItem>
