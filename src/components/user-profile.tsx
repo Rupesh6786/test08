@@ -8,7 +8,7 @@ import { doc, getDoc, collection, query, where, getDocs, updateDoc } from 'fireb
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2, Settings, Check, Play, DollarSign, Target, Star, Image as ImageIcon, UserPlus, MessageSquare, Users, History } from 'lucide-react';
+import { Loader2, Settings, Check, Play, DollarSign, Target, Star, Image as ImageIcon, UserPlus, MessageSquare, Users, History, Trophy } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import type { UserProfileData, UserRegistration } from '@/lib/data';
 import { Button } from './ui/button';
