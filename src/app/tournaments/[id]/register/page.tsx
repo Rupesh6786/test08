@@ -6,7 +6,6 @@ import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import type { Tournament } from '@/lib/data';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { RuleExplainer } from '@/components/rule-explainer';
 import { MatchRegistrationForm } from '@/components/match-registration-form';
 import { Calendar, Users, Trophy, Coins, ShieldCheck, Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -106,7 +105,6 @@ export default function RegisterMatchPage() {
                     </div>
                 </CardContent>
               </Card>
-              <RuleExplainer gameName={tournament.game} />
             </div>
             <div>
               <Card className="bg-card/80 backdrop-blur-sm border-border/50 sticky top-24">
