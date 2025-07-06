@@ -1,57 +1,42 @@
+
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-  
-    // Check if the currently authenticated user is the designated admin.
-    function isAdmin() {
-      return request.auth.uid == 'ymwd0rW1wnNZkYlUR7cUi9dkd452';
-    }
 
-    // Rules for the 'users' collection.
+    // Users: Public read, only self-write
     match /users/{userId} {
-      // Any authenticated user can read a user's profile.
-      allow read: if request.auth != null;
-      // Only the user themselves can create or update their own profile.
-      allow create, update: if request.auth.uid == userId;
-      // Only the user or an admin can delete a profile.
-      allow delete: if request.auth.uid == userId || isAdmin();
+      allow read: if true;
+      allow create: if request.auth.uid == userId;
+      allow update: if request.auth.uid == userId;
+      allow delete: if request.auth.uid == 'ymwd0rW1wnNZkYlUR7cUi9dkd452'; // Admin can delete
     }
-    
-    // Rules for the 'tournaments' collection.
+
+    // Tournaments: Public read, admin-only write
     match /tournaments/{tournamentId} {
-      // Anyone can read tournament data.
       allow read: if true;
-      // Only admins can create, update, or delete tournaments.
-      allow write: if isAdmin();
+      allow write: if request.auth.uid == 'ymwd0rW1wnNZkYlUR7cUi9dkd452';
     }
 
-    // Rules for the 'registrations' collection.
+    // Registrations: Users can create for themselves. User can read their own. Admin can read all and update.
     match /registrations/{registrationId} {
-      // A user can read their own registration, or an admin can read any registration.
-      allow read: if request.auth.uid == resource.data.userId || isAdmin();
-      // A user can only create a registration for themselves.
+      allow read: if request.auth.uid == resource.data.userId || request.auth.uid == 'ymwd0rW1wnNZkYlUR7cUi9dkd452';
       allow create: if request.auth.uid == request.resource.data.userId;
-      // Only an admin can update (e.g., confirm payment) or delete a registration.
-      allow update, delete: if isAdmin();
+      allow update: if request.auth.uid == 'ymwd0rW1wnNZkYlUR7cUi9dkd452';
+      allow delete: if request.auth.uid == 'ymwd0rW1wnNZkYlUR7cUi9dkd452';
     }
 
-    // Rules for the 'inquiries' collection.
+    // Inquiries: Anyone can create, only admin can read/write.
     match /inquiries/{inquiryId} {
-      // Anyone can submit an inquiry (create).
+      allow read, write: if request.auth.uid == 'ymwd0rW1wnNZkYlUR7cUi9dkd452';
       allow create: if true;
-      // Only an admin can read, update, or delete inquiries.
-      allow read, update, delete: if isAdmin();
     }
 
-    // Rules for the 'communities' collection.
+    // Communities: Public read, authenticated users can create.
     match /communities/{communityId} {
-      // Anyone can read community data.
       allow read: if true;
-      // An authenticated user can create a community.
       allow create: if request.auth != null && request.auth.uid == request.resource.data.creatorId;
-      // Only the community creator or an admin can update or delete it.
-      allow update, delete: if request.auth.uid == resource.data.creatorId || isAdmin();
+      allow update, delete: if request.auth.uid == resource.data.creatorId || request.auth.uid == 'ymwd0rW1wnNZkYlUR7cUi9dkd452';
     }
   }
 }
