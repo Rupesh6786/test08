@@ -24,6 +24,7 @@ const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/tournaments', label: 'Tournaments' },
   { href: '/leaderboard', label: 'Leaderboard' },
+  { href: '/community', label: 'Community' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
 ];
