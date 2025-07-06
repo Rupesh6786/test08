@@ -42,9 +42,6 @@ export function Footer() {
         </div>
         <div className="mt-8 pt-8 border-t border-border/40 text-center text-muted-foreground text-sm">
           <p>{`© ${new Date().getFullYear()} BattleBucks. All rights reserved.`}</p>
-          <p className="flex items-center justify-center gap-1.5 mt-2">
-            Made with <Heart className="w-4 h-4 text-destructive fill-destructive" /> by Rupesh Thakur
-          </p>
         </div>
       </div>
     </footer>
