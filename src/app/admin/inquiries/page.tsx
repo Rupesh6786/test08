@@ -64,9 +64,9 @@ export default function AdminInquiriesPage() {
 
     return (
         <div className="space-y-6">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                <h1 className="text-3xl font-bold text-primary">Contact Inquiries</h1>
-                <div className="flex items-center gap-2 w-full md:w-auto">
+            <div className="flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between">
+                <h1 className="text-3xl font-bold text-primary shrink-0">Contact Inquiries</h1>
+                <div className="flex w-full items-center justify-start gap-2 md:w-auto md:justify-end">
                     <Select value={statusFilter} onValueChange={setStatusFilter}>
                         <SelectTrigger className="w-full sm:w-[150px]"><SelectValue placeholder="Filter by status" /></SelectTrigger>
                         <SelectContent>
@@ -83,9 +83,9 @@ export default function AdminInquiriesPage() {
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Date</TableHead>
+                                <TableHead className="hidden md:table-cell">Date</TableHead>
                                 <TableHead>Name</TableHead>
-                                <TableHead>Email</TableHead>
+                                <TableHead className="hidden sm:table-cell">Email</TableHead>
                                 <TableHead>Message</TableHead>
                                 <TableHead className="text-center">Status</TableHead>
                                 <TableHead className="text-right">Action</TableHead>
@@ -97,12 +97,12 @@ export default function AdminInquiriesPage() {
                             ) : filteredInquiries.length > 0 ? (
                                 filteredInquiries.map(inquiry => (
                                     <TableRow key={inquiry.id}>
-                                        <TableCell className="font-mono text-xs">
+                                        <TableCell className="hidden font-mono text-xs md:table-cell">
                                             {inquiry.submittedAt ? format(inquiry.submittedAt.toDate(), 'PPpp') : 'N/A'}
                                         </TableCell>
                                         <TableCell className="font-medium">{inquiry.name}</TableCell>
-                                        <TableCell>{inquiry.email}</TableCell>
-                                        <TableCell className="max-w-xs truncate">{inquiry.message}</TableCell>
+                                        <TableCell className="hidden sm:table-cell">{inquiry.email}</TableCell>
+                                        <TableCell className="max-w-[150px] sm:max-w-xs truncate">{inquiry.message}</TableCell>
                                         <TableCell className="text-center">
                                             <Badge variant={inquiry.status === 'Read' ? 'secondary' : 'success'}>
                                                 {inquiry.status}
@@ -111,8 +111,8 @@ export default function AdminInquiriesPage() {
                                         <TableCell className="text-right">
                                            {inquiry.status === 'New' && (
                                                 <Button size="sm" variant="outline" onClick={() => handleMarkAsRead(inquiry.id)}>
-                                                    <MailCheck className="mr-2 h-4 w-4" />
-                                                    Mark Read
+                                                    <MailCheck className="mr-0 h-4 w-4 md:mr-2" />
+                                                    <span className="hidden md:inline">Mark Read</span>
                                                 </Button>
                                            )}
                                         </TableCell>

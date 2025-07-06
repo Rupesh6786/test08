@@ -39,7 +39,7 @@ export default function RevenuePage() {
         <Button><Download className="mr-2 h-4 w-4" /> Export CSV</Button>
       </div>
       
-      <div className="grid gap-8 md:grid-cols-2">
+      <div className="grid gap-8 grid-cols-1 md:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>Revenue by Month</CardTitle>
@@ -70,7 +70,7 @@ export default function RevenuePage() {
               <BarChart data={topTournamentsData} layout="vertical">
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis type="number" />
-                <YAxis dataKey="name" type="category" width={120} />
+                <YAxis dataKey="name" type="category" width={120} tick={{fontSize: 12}} />
                 <Tooltip 
                   contentStyle={{ 
                     backgroundColor: "hsl(var(--background))", 
@@ -94,8 +94,8 @@ export default function RevenuePage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Player</TableHead>
-                <TableHead>Tournament</TableHead>
-                <TableHead>Date</TableHead>
+                <TableHead className="hidden sm:table-cell">Tournament</TableHead>
+                <TableHead className="hidden md:table-cell">Date</TableHead>
                 <TableHead>Amount</TableHead>
                 <TableHead className="text-center">Status</TableHead>
               </TableRow>
@@ -104,8 +104,8 @@ export default function RevenuePage() {
               {recentPaymentsData.map((payment) => (
                 <TableRow key={payment.id}>
                   <TableCell className="font-medium">{payment.player}</TableCell>
-                  <TableCell>{payment.tournament}</TableCell>
-                  <TableCell>{payment.date}</TableCell>
+                  <TableCell className="hidden sm:table-cell">{payment.tournament}</TableCell>
+                  <TableCell className="hidden md:table-cell">{payment.date}</TableCell>
                   <TableCell>₹{payment.amount}</TableCell>
                   <TableCell className="text-center">
                     <Badge variant={payment.status === 'Confirmed' ? 'success' : 'secondary'}>{payment.status}</Badge>

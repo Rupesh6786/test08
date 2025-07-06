@@ -105,9 +105,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </Sidebar>
             
             <div className="flex flex-1 flex-col">
-                <header className="flex h-14 items-center justify-between gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 lg:h-[60px] lg:px-6 md:justify-end sticky top-0 z-30">
+                <header className="flex h-14 items-center justify-between gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 lg:h-[60px] lg:px-6 sticky top-0 z-30">
                     <SidebarTrigger className="md:hidden" />
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-4 ml-auto">
                         <span className="text-sm text-muted-foreground hidden md:inline">Welcome, Admin!</span>
                         <ThemeToggle />
                     </div>

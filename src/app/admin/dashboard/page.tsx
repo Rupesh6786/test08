@@ -172,7 +172,7 @@ export default function AdminDashboardPage() {
         <h1 className="text-3xl font-bold text-primary">Dashboard</h1>
         
         {/* Stats Cards */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             <Link href="/admin/revenue">
                 <Card className="hover:bg-muted/80 transition-colors">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

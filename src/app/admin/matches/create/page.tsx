@@ -140,7 +140,7 @@ export default function ManageMatchesPage() {
             <Input
               type="search"
               placeholder="Search matches..."
-              className="pl-8 sm:w-64"
+              className="pl-8 sm:w-auto md:w-64"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -153,7 +153,7 @@ export default function ManageMatchesPage() {
             <SelectTrigger className="w-full sm:w-[150px]"><SelectValue placeholder="Filter by status" /></SelectTrigger>
             <SelectContent><SelectItem value="all">All Statuses</SelectItem><SelectItem value="Upcoming">Upcoming</SelectItem><SelectItem value="Ongoing">Ongoing</SelectItem><SelectItem value="Completed">Completed</SelectItem></SelectContent>
           </Select>
-          <Button onClick={handleAddNew} className="w-full sm:w-auto"><PlusCircle />Add New Match</Button>
+          <Button onClick={handleAddNew} className="w-full sm:w-auto"><PlusCircle />Add New</Button>
         </div>
       </div>
 
@@ -163,10 +163,10 @@ export default function ManageMatchesPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Tournament</TableHead>
-                <TableHead>Game</TableHead>
-                <TableHead>Slots Filled</TableHead>
-                <TableHead>Entry Fee</TableHead>
-                <TableHead>Prize Pool</TableHead>
+                <TableHead className="hidden md:table-cell">Game</TableHead>
+                <TableHead className="hidden sm:table-cell">Slots</TableHead>
+                <TableHead>Fee</TableHead>
+                <TableHead>Prize</TableHead>
                 <TableHead className="text-center">Status</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
@@ -178,8 +178,8 @@ export default function ManageMatchesPage() {
                 filteredTournaments.map(tournament => (
                   <TableRow key={tournament.id}>
                     <TableCell className="font-medium">{tournament.title}</TableCell>
-                    <TableCell>{tournament.game}</TableCell>
-                    <TableCell>{tournament.slotsAllotted || 0}/{tournament.slotsTotal}</TableCell>
+                    <TableCell className="hidden md:table-cell">{tournament.game}</TableCell>
+                    <TableCell className="hidden sm:table-cell">{tournament.slotsAllotted || 0}/{tournament.slotsTotal}</TableCell>
                     <TableCell>₹{tournament.entryFee.toLocaleString()}</TableCell>
                     <TableCell>₹{tournament.prizePool.toLocaleString()}</TableCell>
                     <TableCell className="text-center"><Badge variant={getStatusBadgeVariant(tournament.status)}>{tournament.status}</Badge></TableCell>
@@ -249,44 +249,46 @@ function MatchFormDialog({ isOpen, setIsOpen, onSave, tournament }: { isOpen: bo
               <DialogDescription>Fill in the details for the tournament.</DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="title" className="text-right">Title</Label>
-                <Input id="title" value={formData.title || ''} onChange={handleChange} className="col-span-3" disabled={isSaving} />
+              <div className="grid grid-cols-1 gap-y-2 items-center md:grid-cols-4 md:gap-x-4">
+                <Label htmlFor="title" className="md:text-right">Title</Label>
+                <Input id="title" value={formData.title || ''} onChange={handleChange} className="md:col-span-3" disabled={isSaving} />
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label className="text-right">Game</Label>
+              <div className="grid grid-cols-1 gap-y-2 items-center md:grid-cols-4 md:gap-x-4">
+                <Label className="md:text-right">Game</Label>
                 <Select value={formData.game || ''} onValueChange={(v) => handleSelectChange('game', v)} disabled={isSaving}>
-                    <SelectTrigger className="col-span-3"><SelectValue placeholder="Select a game" /></SelectTrigger>
+                    <SelectTrigger className="md:col-span-3"><SelectValue placeholder="Select a game" /></SelectTrigger>
                     <SelectContent><SelectItem value="PUBG">PUBG</SelectItem><SelectItem value="Free Fire">Free Fire</SelectItem></SelectContent>
                 </Select>
               </div>
-               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="date" className="text-right">Date & Time</Label>
-                <Input id="date" type="date" value={formData.date || ''} onChange={handleChange} className="col-span-2" disabled={isSaving} />
-                <Input id="time" type="time" value={formData.time || ''} onChange={handleChange} className="col-span-1" disabled={isSaving} />
+               <div className="grid grid-cols-1 gap-y-2 items-center md:grid-cols-4 md:gap-x-4">
+                <Label htmlFor="date" className="md:text-right">Date & Time</Label>
+                <div className="flex flex-col gap-2 sm:flex-row md:col-span-3">
+                    <Input id="date" type="date" value={formData.date || ''} onChange={handleChange} className="w-full" disabled={isSaving} />
+                    <Input id="time" type="time" value={formData.time || ''} onChange={handleChange} className="w-full" disabled={isSaving} />
+                </div>
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="entryFee" className="text-right">Entry Fee</Label>
-                <Input id="entryFee" type="number" value={formData.entryFee || ''} onChange={handleChange} className="col-span-3" disabled={isSaving} />
+              <div className="grid grid-cols-1 gap-y-2 items-center md:grid-cols-4 md:gap-x-4">
+                <Label htmlFor="entryFee" className="md:text-right">Entry Fee</Label>
+                <Input id="entryFee" type="number" value={formData.entryFee || ''} onChange={handleChange} className="md:col-span-3" disabled={isSaving} />
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="prizePool" className="text-right">Prize Pool</Label>
-                <Input id="prizePool" type="number" value={formData.prizePool || ''} onChange={handleChange} className="col-span-3" disabled={isSaving} />
+              <div className="grid grid-cols-1 gap-y-2 items-center md:grid-cols-4 md:gap-x-4">
+                <Label htmlFor="prizePool" className="md:text-right">Prize Pool</Label>
+                <Input id="prizePool" type="number" value={formData.prizePool || ''} onChange={handleChange} className="md:col-span-3" disabled={isSaving} />
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="slotsTotal" className="text-right">Total Slots</Label>
-                <Input id="slotsTotal" type="number" value={formData.slotsTotal || ''} onChange={handleChange} className="col-span-3" disabled={isSaving} />
+              <div className="grid grid-cols-1 gap-y-2 items-center md:grid-cols-4 md:gap-x-4">
+                <Label htmlFor="slotsTotal" className="md:text-right">Total Slots</Label>
+                <Input id="slotsTotal" type="number" value={formData.slotsTotal || ''} onChange={handleChange} className="md:col-span-3" disabled={isSaving} />
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                 <Label className="text-right">Status</Label>
+              <div className="grid grid-cols-1 gap-y-2 items-center md:grid-cols-4 md:gap-x-4">
+                 <Label className="md:text-right">Status</Label>
                  <Select value={formData.status || ''} onValueChange={(v) => handleSelectChange('status', v)} disabled={isSaving}>
-                    <SelectTrigger className="col-span-3"><SelectValue placeholder="Select status" /></SelectTrigger>
+                    <SelectTrigger className="md:col-span-3"><SelectValue placeholder="Select status" /></SelectTrigger>
                     <SelectContent><SelectItem value="Upcoming">Upcoming</SelectItem><SelectItem value="Ongoing">Ongoing</SelectItem><SelectItem value="Completed">Completed</SelectItem></SelectContent>
                 </Select>
               </div>
-              <div className="grid grid-cols-4 items-start gap-4">
-                <Label htmlFor="rules" className="text-right pt-2">Rules</Label>
-                <Textarea id="rules" value={Array.isArray(formData.rules) ? formData.rules.join('\n') : ''} onChange={(e) => setFormData(p => ({...p, rules: e.target.value.split('\n')}))} placeholder="One rule per line" className="col-span-3" disabled={isSaving} />
+              <div className="grid grid-cols-1 items-start gap-y-2 md:grid-cols-4 md:gap-x-4">
+                <Label htmlFor="rules" className="md:text-right pt-2">Rules</Label>
+                <Textarea id="rules" value={Array.isArray(formData.rules) ? formData.rules.join('\n') : ''} onChange={(e) => setFormData(p => ({...p, rules: e.target.value.split('\n')}))} placeholder="One rule per line" className="md:col-span-3" disabled={isSaving} />
               </div>
             </div>
             <DialogFooter>
