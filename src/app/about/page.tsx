@@ -15,8 +15,8 @@ export default function AboutPage() {
                 <Image
                 src="/img/player-waking_hero_section.png"
                 alt="Gaming background"
-                layout="fill"
-                objectFit="cover"
+                fill
+                className="object-cover"
                 />
             </div>
           <div className="container mx-auto px-4 relative z-10 max-w-7xl">
@@ -43,14 +43,13 @@ export default function AboutPage() {
                             We are a team of dedicated developers, gamers, and esports fans committed to building the best possible experience for our community.
                         </p>
                     </div>
-                     <div>
+                     <div className="relative w-full max-w-[600px] aspect-[3/2] rounded-lg shadow-lg overflow-hidden mx-auto lg:mx-0">
                         <Image 
                             src="/img/media_about_section.png"
                             data-ai-hint="gaming community"
                             alt="Our Team"
-                            width={600}
-                            height={400}
-                            className="rounded-lg shadow-lg object-cover"
+                            fill
+                            className="object-cover"
                         />
                     </div>
                 </div>
