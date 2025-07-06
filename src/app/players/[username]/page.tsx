@@ -27,65 +27,90 @@ export default function PlayerProfilePage({ params }: { params: { username: stri
     { icon: Calendar, label: 'Member Since', value: format(new Date(player.joinedOn), 'MMM yyyy') },
   ];
 
+  const DetailsContent = () => (
+    <>
+      <div className="my-6 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
+        {stats.map((stat, index) => (
+          <div key={index} className="flex items-center gap-4">
+            <div className="p-3 bg-primary/20 rounded-md">
+              <stat.icon className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">{stat.label}</p>
+              <p className="text-lg font-bold text-foreground">{stat.value}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {(player.socialLinks.twitter || player.socialLinks.instagram) && (
+        <div className="flex items-center justify-start gap-6 py-4 border-t border-border/50">
+          {player.socialLinks.twitter && (
+            <Link href={player.socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
+              <Twitter className="w-5 h-5" /> Twitter
+            </Link>
+          )}
+          {player.socialLinks.instagram && (
+            <Link href={player.socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
+              <Instagram className="w-5 h-5" /> Instagram
+            </Link>
+          )}
+        </div>
+      )}
+
+      <div className="mt-6">
+        <Button asChild variant="outline" size="lg">
+          <Link href="/leaderboard"><ArrowLeft className="mr-2" /> Back to Leaderboard</Link>
+        </Button>
+      </div>
+    </>
+  );
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <Header />
       <main className="flex-1 flex items-center justify-center py-8 md:py-12 px-4">
-        <Card className="w-full max-w-lg lg:max-w-4xl grid grid-cols-1 lg:grid-cols-2 gap-0 overflow-hidden bg-card/80 backdrop-blur-sm border-border/50 shadow-lg rounded-xl">
-          
-          {/* Left Side: Image + Overlay Info */}
-          <div className="relative aspect-square lg:aspect-auto">
-             <Image
-              src={player.avatar}
-              alt={player.username}
-              fill
-              className="object-cover"
-              priority
-            />
-            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 p-6 text-white">
-                <h1 className="font-headline text-4xl md:text-5xl font-bold uppercase tracking-wider" style={{ textShadow: '0 0 10px hsl(var(--primary))' }}>
-                    {player.username}
+        <Card className="w-full max-w-lg lg:max-w-4xl overflow-hidden bg-card/80 backdrop-blur-sm border-border/50 shadow-lg rounded-xl">
+          {/* Mobile and Tablet View with overlay */}
+          <div className="lg:hidden">
+            <div className="relative aspect-[3/4] w-full">
+              <Image
+                src={player.avatar}
+                alt={player.username}
+                fill
+                className="object-cover"
+                priority
+              />
+              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-6 text-white">
+                <h1 className="font-headline text-4xl font-bold uppercase tracking-wider" style={{ textShadow: '0 0 10px hsl(var(--primary))' }}>
+                  {player.username}
                 </h1>
                 <p className="text-white/90 text-lg italic mt-2">"{player.bio}"</p>
+              </div>
+            </div>
+            <div className="p-6">
+              <DetailsContent />
             </div>
           </div>
-          
-          {/* Right Side: Stats and Actions */}
-          <div className="flex flex-col justify-center p-6 md:p-8">
-            <div className="my-6 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
-              {stats.map((stat, index) => (
-                <div key={index} className="flex items-center gap-4">
-                  <div className="p-3 bg-primary/20 rounded-md">
-                    <stat.icon className="w-5 h-5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">{stat.label}</p>
-                    <p className="text-lg font-bold text-foreground">{stat.value}</p>
-                  </div>
-                </div>
-              ))}
+
+          {/* Desktop View (previous design) */}
+          <div className="hidden lg:grid grid-cols-2 gap-0">
+            <div className="relative">
+              <Image
+                src={player.avatar}
+                alt={player.username}
+                fill
+                className="object-cover"
+                priority
+              />
             </div>
-
-            {(player.socialLinks.twitter || player.socialLinks.instagram) && (
-              <div className="flex items-center justify-start gap-6 py-4 border-t border-border/50">
-                {player.socialLinks.twitter && (
-                  <Link href={player.socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
-                    <Twitter className="w-5 h-5" /> Twitter
-                  </Link>
-                )}
-                {player.socialLinks.instagram && (
-                  <Link href={player.socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
-                    <Instagram className="w-5 h-5" /> Instagram
-                  </Link>
-                )}
-              </div>
-            )}
-
-            <div className="mt-6">
-              <Button asChild variant="outline" size="lg">
-                <Link href="/leaderboard"><ArrowLeft className="mr-2" /> Back to Leaderboard</Link>
-              </Button>
+            <div className="flex flex-col justify-center p-8">
+              <h1 className="font-headline text-4xl md:text-5xl font-bold uppercase tracking-wider text-primary">
+                {player.username}
+              </h1>
+              <p className="text-muted-foreground text-lg italic mt-2">"{player.bio}"</p>
+              <DetailsContent />
             </div>
           </div>
         </Card>
