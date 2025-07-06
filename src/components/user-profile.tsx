@@ -8,8 +8,7 @@ import { doc, getDoc, collection, query, where, getDocs, updateDoc } from 'fireb
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2, Settings, Check, Play, DollarSign, Target, Star, Image as ImageIcon, UserPlus, MessageSquare, Users, History, Trophy } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Loader2, Settings, Check, Play, DollarSign, Target, UserPlus, MessageSquare, Users, History, Trophy } from 'lucide-react';
 import type { UserProfileData, UserRegistration } from '@/lib/data';
 import { Button } from './ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -35,13 +34,6 @@ const performanceData = [
   { name: 'Jan', perf: 4 }, { name: 'Feb', perf: 3 }, { name: 'Mar', perf: 5 },
   { name: 'Apr', perf: 6 }, { name: 'May', perf: 8 }, { name: 'Jun', perf: 7 },
 ];
-
-const mockMedia = [
-    { src: 'https://placehold.co/600x400.png', hint: 'gaming character' },
-    { src: 'https://placehold.co/600x400.png', hint: 'gaming screenshot' },
-    { src: 'https://placehold.co/600x400.png', hint: 'gamer profile' },
-    { src: 'https://placehold.co/600x400.png', hint: 'winner chicken dinner' },
-]
 
 export function UserProfile() {
     const [authUser, setAuthUser] = useState<User | null>(null);
@@ -229,14 +221,6 @@ export function UserProfile() {
                                     </LineChart>
                                 </ResponsiveContainer>
                              </div>
-                        </CardContent>
-                    </Card>
-                     <Card className="bg-card/80">
-                        <CardHeader><CardTitle>Media Gallery</CardTitle></CardHeader>
-                        <CardContent className="grid grid-cols-2 gap-2">
-                           {mockMedia.map((media, index) => (
-                               <Image key={index} src={media.src} data-ai-hint={media.hint} alt="Gallery image" width={200} height={200} className="rounded-md aspect-square object-cover" />
-                           ))}
                         </CardContent>
                     </Card>
                 </div>
