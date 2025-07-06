@@ -49,8 +49,6 @@ export type UserProfileData = {
     teamName: string;
     status: 'active' | 'banned';
     photoURL?: string;
-    
-    // New fields from design
     bio?: string;
     joinedOn?: Timestamp;
     totalMatches?: number;
@@ -84,9 +82,11 @@ export type Community = {
   id: string;
   name: string;
   description: string;
-  followers: number;
+  members: number;
   avatar: string;
   game: 'PUBG' | 'Free Fire' | 'All';
+  creatorId: string;
+  createdAt: Timestamp;
 };
 
 
@@ -121,39 +121,4 @@ export const testimonials: Testimonial[] = [
     winHistory: 'Placed Top 5 in The Grand Clash',
     avatar: 'https://placehold.co/100x100/333333/FFFFFF.png?text=P',
   },
-];
-
-export const communities: Community[] = [
-  {
-    id: 'pubg-pros',
-    name: 'PUBG Pros India',
-    description: 'The official hub for professional PUBG players and aspirants in India. Scrims, tips, and more.',
-    followers: 12500,
-    avatar: 'https://placehold.co/100x100/ff9900/ffffff.png?text=P',
-    game: 'PUBG'
-  },
-  {
-    id: 'ff-fanatics',
-    name: 'Free Fire Fanatics',
-    description: 'A passionate community for Free Fire players. Share clips, find squads, and have fun!',
-    followers: 8200,
-    avatar: 'https://placehold.co/100x100/ff4444/ffffff.png?text=F',
-    game: 'Free Fire'
-  },
-  {
-    id: 'mumbai-gamers',
-    name: 'Mumbai Gamers Guild',
-    description: 'Connecting gamers across Mumbai. All games and platforms welcome.',
-    followers: 5600,
-    avatar: 'https://placehold.co/100x100/3399ff/ffffff.png?text=M',
-    game: 'All'
-  },
-  {
-    id: 'battle-royale-elite',
-    name: 'Battle Royale Elite',
-    description: 'For the best of the best in PUBG and Free Fire. High-level gameplay and strategy discussions.',
-    followers: 21000,
-    avatar: 'https://placehold.co/100x100/7CFC00/333333.png?text=E',
-    game: 'All'
-  }
 ];

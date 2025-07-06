@@ -23,10 +23,8 @@ import { cn } from '@/lib/utils';
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/tournaments', label: 'Tournaments' },
-  { href: '/leaderboard', label: 'Leaderboard' },
   { href: '/community', label: 'Community' },
-  { href: '/about', label: 'About' },
-  { href: '/contact', label: 'Contact' },
+  { href: '#', label: 'Media' },
 ];
 
 export function Header() {
@@ -91,6 +89,9 @@ export function Header() {
                  <DropdownMenuItem asChild>
                     <Link href="/profile">Profile</Link>
                 </DropdownMenuItem>
+                 <DropdownMenuItem asChild>
+                    <Link href="/leaderboard">Leaderboard</Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleLogout}>
                   Log out
                 </DropdownMenuItem>
@@ -130,6 +131,13 @@ export function Header() {
               {link.label}
             </Link>
           ))}
+           <Link
+              href="/leaderboard"
+              className="text-lg transition-colors hover:text-primary"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Leaderboard
+            </Link>
           {authUser ? (
             <>
               <Link
