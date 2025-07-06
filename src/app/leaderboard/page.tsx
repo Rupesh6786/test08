@@ -15,11 +15,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { leaderboard } from '@/lib/data.json';
 import type { LeaderboardEntry } from '@/lib/data';
 import { Trophy, Award, Medal, Flame } from 'lucide-react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 
 export default function LeaderboardPage() {
@@ -82,7 +82,9 @@ export default function LeaderboardPage() {
                                     </TableCell>
                                     <TableCell className="text-lg text-foreground">
                                           <div className="flex items-center gap-3">
-                                            <Image src={entry.avatar} alt={entry.username} width={40} height={40} className="rounded-full" />
+                                            <Avatar>
+                                                <AvatarFallback>{entry.username.charAt(0)}</AvatarFallback>
+                                            </Avatar>
                                             <span>{entry.username}</span>
                                           </div>
                                     </TableCell>
@@ -111,7 +113,9 @@ export default function LeaderboardPage() {
                             <div className="flex items-center justify-between gap-4 mb-4">
                                 <div className="flex items-center gap-3">
                                     <div className="w-8 text-center">{getRankIcon(entry.rank)}</div>
-                                    <Image src={entry.avatar} alt={entry.username} width={48} height={48} className="rounded-full border-2 border-accent" />
+                                    <Avatar className="h-12 w-12 border-2 border-accent">
+                                        <AvatarFallback className="text-xl">{entry.username.charAt(0)}</AvatarFallback>
+                                    </Avatar>
                                     <div>
                                     <p className="text-lg font-bold text-foreground">{entry.username}</p>
                                     <p className="text-sm text-muted-foreground font-mono">{entry.clanName}</p>
