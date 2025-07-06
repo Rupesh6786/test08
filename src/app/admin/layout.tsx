@@ -129,7 +129,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     <div className="flex items-center gap-2">
                         <span className="text-sm text-muted-foreground hidden md:inline">Welcome, Admin!</span>
                         <ThemeToggle />
-                        <SidebarTrigger className="hidden md:flex"><Menu className="h-6 w-6" /></SidebarTrigger>
                     </div>
                 </header>
                 <main className="flex-1 p-4 md:p-8 overflow-auto bg-muted/40">
