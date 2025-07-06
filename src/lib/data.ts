@@ -22,9 +22,21 @@ export type Testimonial = {
 
 export type LeaderboardEntry = {
   rank: number;
-  username:string;
+  username: string;
   gameId: string;
   totalWinnings: number;
+  avatar: string;
+  clanName: string;
+  bio: string;
+  socialLinks: {
+    twitter?: string;
+    instagram?: string;
+  };
+  gamesPlayed: number;
+  wins: number;
+  streak: number;
+  lastTournament: string;
+  joinedOn: string;
 };
 
 export type UserProfileData = {

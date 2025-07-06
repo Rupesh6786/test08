@@ -93,6 +93,18 @@
   .animate-ticker {
     animation: ticker 40s linear infinite;
   }
+  
+  .rank-gold-glow {
+    animation: gold-glow 2s ease-in-out infinite alternate;
+  }
+
+  .rank-silver-glow {
+    animation: silver-glow 2s ease-in-out infinite alternate;
+  }
+
+  .rank-bronze-glow {
+    animation: bronze-glow 2s ease-in-out infinite alternate;
+  }
 
   @keyframes ticker {
     0% {
@@ -100,6 +112,33 @@
     }
     100% {
       transform: translateX(-100%);
+    }
+  }
+
+  @keyframes gold-glow {
+    from {
+      filter: drop-shadow(0 0 4px theme('colors.yellow.400'));
+    }
+    to {
+      filter: drop-shadow(0 0 12px theme('colors.yellow.400'));
+    }
+  }
+
+  @keyframes silver-glow {
+    from {
+      filter: drop-shadow(0 0 4px theme('colors.slate.300'));
+    }
+    to {
+      filter: drop-shadow(0 0 12px theme('colors.slate.300'));
+    }
+  }
+
+  @keyframes bronze-glow {
+    from {
+      filter: drop-shadow(0 0 4px theme('colors.amber.500'));
+    }
+    to {
+      filter: drop-shadow(0 0 12px theme('colors.amber.500'));
     }
   }
 }
