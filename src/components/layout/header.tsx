@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from 'next/link';
@@ -129,7 +130,7 @@ export function Header() {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                  <DropdownMenuItem asChild>
-                    <Link href="/profile">Profile</Link>
+                    <Link href="/profile">My Profile</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleLogout}>
                   Log out
@@ -177,7 +178,7 @@ export function Header() {
                 className="text-lg transition-colors hover:text-primary"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Profile
+                My Profile
               </Link>
               <Button
                 onClick={() => {
