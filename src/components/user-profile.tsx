@@ -8,7 +8,7 @@ import { doc, getDoc, collection, query, where, getDocs, updateDoc } from 'fireb
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2, Settings, Check, Play, DollarSign, Target, UserPlus, MessageSquare, Users, History, Trophy } from 'lucide-react';
+import { Loader2, Settings, Check, Play, DollarSign, Target, UserPlus, MessageSquare, Users, History, Trophy, Gamepad2 } from 'lucide-react';
 import type { UserProfileData, UserRegistration } from '@/lib/data';
 import { Button } from './ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -18,6 +18,7 @@ import { format } from 'date-fns';
 import { PubgIcon } from './icons/pubg-icon';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { Badge } from './ui/badge';
+import { Separator } from './ui/separator';
 
 function StatCard({ title, value, children }: { title: string; value: string | number; children: React.ReactNode }) {
     return (
@@ -166,7 +167,17 @@ export function UserProfile() {
                         <Check className="w-7 h-7 text-blue-500 fill-current bg-white rounded-full p-1" />
                     </h1>
                     <p className="text-muted-foreground mt-1">{profile.bio || 'New challenger in the Arena!'}</p>
-                    <p className="text-sm text-muted-foreground mt-2">Member since {profile.joinedOn ? format(profile.joinedOn.toDate(), 'MMM yyyy') : 'N/A'}</p>
+                    <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-2 sm:gap-4 mt-2 text-muted-foreground">
+                        <p className="text-sm flex items-center gap-2">
+                            <Users className="w-4 h-4" />
+                            Member since {profile.joinedOn ? format(profile.joinedOn.toDate(), 'MMM yyyy') : 'N/A'}
+                        </p>
+                        <Separator orientation="vertical" className="h-4 hidden sm:block" />
+                        <p className="text-sm flex items-center gap-2">
+                            <Gamepad2 className="w-4 h-4" />
+                            Game ID: <span className="font-mono font-bold text-foreground">{profile.gameId}</span>
+                        </p>
+                    </div>
                 </div>
             </div>
 
@@ -190,10 +201,6 @@ export function UserProfile() {
                                         <div className="text-xs text-muted-foreground">Favorite Game</div>
                                         <div className="font-bold">PUBG</div>
                                     </div>
-                                </div>
-                                <div>
-                                    <div className="text-xs text-muted-foreground">Game ID</div>
-                                    <div className="font-bold">{profile.gameId}</div>
                                 </div>
                              </div>
                              <div className="grid grid-cols-2 gap-4 text-center">
@@ -223,7 +230,7 @@ export function UserProfile() {
                         <CardHeader><CardTitle>My Registrations</CardTitle></CardHeader>
                         <CardContent>
                            <div className="space-y-4">
-                            {registrations.length > 0 ? registrations.slice(0, 5).map(reg => (
+                            {registrations.length > 0 ? registrations.map(reg => (
                                <div key={reg.id} className="flex items-center justify-between hover:bg-muted/50 p-2 rounded-md transition-colors">
                                     <div>
                                         <p className="font-bold">{reg.tournamentTitle}</p>
