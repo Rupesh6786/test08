@@ -38,57 +38,59 @@ export default function PlayerProfilePage({ params }: { params: { username: stri
             fill
             className="object-cover object-center"
           />
-          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-md" />
         </div>
 
         <div className="relative z-10 container mx-auto px-4 py-12 md:py-20 h-full flex flex-col justify-center text-white">
-            <div className="grid grid-cols-1 md:grid-cols-5 lg:grid-cols-3 gap-8 items-center">
-                <div className="md:col-span-2 lg:col-span-1 flex justify-center">
-                   <Image
-                        src={player.avatar}
-                        alt={player.username}
-                        width={300}
-                        height={300}
-                        className="rounded-full border-4 border-primary shadow-lg box-shadow-primary aspect-square object-cover"
-                    />
-                </div>
-
-                <div className="md:col-span-3 lg:col-span-2 bg-black/30 backdrop-blur-lg rounded-xl p-6 md:p-8 shadow-2xl border border-white/10">
-                    <div className="flex flex-col items-center md:items-start text-center md:text-left">
-                        <h1 className="font-headline text-4xl md:text-6xl font-bold uppercase tracking-wider text-primary text-shadow-primary">
-                            {player.username}
-                        </h1>
-                        <p className="text-white/80 text-lg mt-2 italic">"{player.bio}"</p>
+            <div className="max-w-7xl mx-auto w-full">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
+                    <div className="lg:col-span-1 flex justify-center">
+                    <Image
+                            src={player.avatar}
+                            alt={player.username}
+                            width={300}
+                            height={300}
+                            className="rounded-full border-4 border-primary shadow-lg box-shadow-primary aspect-square object-cover"
+                        />
                     </div>
 
-                    <div className="my-8 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
-                        {stats.map((stat, index) => (
-                             <div key={index} className="flex items-center gap-4">
-                                <div className="p-3 bg-primary/20 rounded-md">
-                                    <stat.icon className="w-6 h-6 text-primary" />
-                                </div>
-                                <div>
-                                    <p className="text-sm text-white/60">{stat.label}</p>
-                                    <p className="text-xl font-bold text-white">{stat.value}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-
-                     {(player.socialLinks.twitter || player.socialLinks.instagram) && (
-                        <div className="flex items-center justify-center md:justify-start gap-6 pt-4 border-t border-white/10">
-                            {player.socialLinks.twitter && (
-                                <Link href={player.socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/80 hover:text-primary transition-colors">
-                                    <Twitter className="w-5 h-5" /> Twitter
-                                </Link>
-                            )}
-                            {player.socialLinks.instagram && (
-                                <Link href={player.socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/80 hover:text-primary transition-colors">
-                                    <Instagram className="w-5 h-5" /> Instagram
-                                </Link>
-                            )}
+                    <div className="lg:col-span-2 bg-black/40 backdrop-blur-lg rounded-xl p-8 shadow-2xl border border-white/10">
+                        <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
+                            <h1 className="font-headline text-4xl md:text-6xl font-bold uppercase tracking-wider text-primary text-shadow-primary">
+                                {player.username}
+                            </h1>
+                            <p className="text-white/80 text-lg mt-2 italic">"{player.bio}"</p>
                         </div>
-                    )}
+
+                        <div className="my-8 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
+                            {stats.map((stat, index) => (
+                                <div key={index} className="flex items-center gap-4">
+                                    <div className="p-3 bg-primary/20 rounded-md">
+                                        <stat.icon className="w-6 h-6 text-primary" />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-white/60">{stat.label}</p>
+                                        <p className="text-xl font-bold text-white">{stat.value}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {(player.socialLinks.twitter || player.socialLinks.instagram) && (
+                            <div className="flex items-center justify-center lg:justify-start gap-6 pt-4 border-t border-white/10">
+                                {player.socialLinks.twitter && (
+                                    <Link href={player.socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/80 hover:text-primary transition-colors">
+                                        <Twitter className="w-5 h-5" /> Twitter
+                                    </Link>
+                                )}
+                                {player.socialLinks.instagram && (
+                                    <Link href={player.socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/80 hover:text-primary transition-colors">
+                                        <Instagram className="w-5 h-5" /> Instagram
+                                    </Link>
+                                )}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
              <div className="text-center mt-12">
