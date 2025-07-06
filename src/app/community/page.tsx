@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -106,7 +107,7 @@ export default function CommunityPage() {
     );
 
     const renderPlayerSkeletons = (count: number) => (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
             {Array.from({ length: count }).map((_, i) => (
                 <div key={i} className="p-4 bg-card/80 backdrop-blur-sm border-border/50 flex items-center gap-4 rounded-lg">
                     <Skeleton className="h-16 w-16 rounded-full" />
@@ -200,7 +201,7 @@ export default function CommunityPage() {
                                         renderPlayerSkeletons(8)
                                     ) : (
                                         filteredPlayers.length > 0 ? (
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
                                                 {filteredPlayers.map(player => (
                                                     <PlayerSearchResultCard key={player.uid} user={player} />
                                                 ))}
