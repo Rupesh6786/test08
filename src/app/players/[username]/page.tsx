@@ -1,4 +1,3 @@
-
 "use client";
 
 import { notFound } from 'next/navigation';
@@ -15,6 +14,7 @@ import { collection, query, where, getDocs, limit } from 'firebase/firestore';
 import { useState, useEffect } from 'react';
 
 export default function PlayerProfilePage({ params }: { params: { username: string } }) {
+  const { username: encodedUsername } = params;
   const [player, setPlayer] = useState<UserProfileData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -41,9 +41,11 @@ export default function PlayerProfilePage({ params }: { params: { username: stri
         }
     };
     
-    const username = decodeURIComponent(params.username);
-    fetchPlayer(username);
-  }, [params.username]);
+    if (encodedUsername) {
+        const username = decodeURIComponent(encodedUsername as string);
+        fetchPlayer(username);
+    }
+  }, [encodedUsername]);
 
 
   if (isLoading) {
