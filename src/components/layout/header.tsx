@@ -63,6 +63,9 @@ export function Header() {
               {link.label}
             </Link>
           ))}
+           <Link href="/leaderboard" className="transition-colors hover:text-primary">
+              Leaderboard
+            </Link>
         </nav>
 
         <div className="hidden md:flex items-center space-x-4">
