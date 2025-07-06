@@ -131,16 +131,25 @@ export function Header() {
             </Link>
           ))}
           {authUser ? (
-            <Button
-              onClick={() => {
-                handleLogout();
-                setIsMenuOpen(false);
-              }}
-              variant="outline"
-              className="border-accent text-accent hover:bg-accent hover:text-accent-foreground"
-            >
-              Log Out
-            </Button>
+            <>
+              <Link
+                href="/profile"
+                className="text-lg transition-colors hover:text-primary"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Profile
+              </Link>
+              <Button
+                onClick={() => {
+                  handleLogout();
+                  setIsMenuOpen(false);
+                }}
+                variant="outline"
+                className="border-accent text-accent hover:bg-accent hover:text-accent-foreground"
+              >
+                Log Out
+              </Button>
+            </>
           ) : (
             <Button
               asChild
