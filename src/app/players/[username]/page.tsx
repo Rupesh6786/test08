@@ -70,7 +70,7 @@ export default function PlayerProfilePage({ params }: { params: { username: stri
     <div className="flex min-h-screen flex-col bg-background">
       <Header />
       <main className="flex-1 flex items-center justify-center py-8 md:py-12 px-4">
-        <Card className="w-full max-w-lg lg:max-w-4xl overflow-hidden bg-card/80 backdrop-blur-sm border-border/50 shadow-lg rounded-xl">
+        <Card className="w-full max-w-lg lg:max-w-6xl overflow-hidden bg-card/80 backdrop-blur-sm border-border/50 shadow-lg rounded-xl">
           {/* Mobile and Tablet View with overlay */}
           <div className="lg:hidden">
             <div className="relative aspect-[3/4] w-full">
@@ -95,8 +95,8 @@ export default function PlayerProfilePage({ params }: { params: { username: stri
           </div>
 
           {/* Desktop View (previous design) */}
-          <div className="hidden lg:grid grid-cols-2 gap-0">
-            <div className="relative">
+          <div className="hidden lg:grid lg:grid-cols-5 gap-0">
+            <div className="relative lg:col-span-2">
               <Image
                 src={player.avatar}
                 alt={player.username}
@@ -105,7 +105,7 @@ export default function PlayerProfilePage({ params }: { params: { username: stri
                 priority
               />
             </div>
-            <div className="flex flex-col justify-center p-8">
+            <div className="lg:col-span-3 flex flex-col justify-center p-12">
               <h1 className="font-headline text-4xl md:text-5xl font-bold uppercase tracking-wider text-primary">
                 {player.username}
               </h1>
