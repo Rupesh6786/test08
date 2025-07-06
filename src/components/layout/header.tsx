@@ -23,6 +23,7 @@ import { cn } from '@/lib/utils';
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/tournaments', label: 'Tournaments' },
+  { href: '/leaderboard', label: 'Leaderboard' },
   { href: '/community', label: 'Community' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
@@ -63,9 +64,6 @@ export function Header() {
               {link.label}
             </Link>
           ))}
-           <Link href="/leaderboard" className="transition-colors hover:text-primary">
-              Leaderboard
-            </Link>
         </nav>
 
         <div className="hidden md:flex items-center space-x-4">
@@ -135,13 +133,6 @@ export function Header() {
               {link.label}
             </Link>
           ))}
-           <Link
-              href="/leaderboard"
-              className="text-lg transition-colors hover:text-primary"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Leaderboard
-            </Link>
           {authUser ? (
             <>
               <Link
