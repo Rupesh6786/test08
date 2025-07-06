@@ -1,4 +1,6 @@
 
+import type { Timestamp } from "firebase/firestore";
+
 export type Tournament = {
   id: string;
   title: string;
@@ -47,6 +49,13 @@ export type UserProfileData = {
     teamName: string;
     status: 'active' | 'banned';
     photoURL?: string;
+    
+    // New fields from design
+    bio?: string;
+    joinedOn?: Timestamp;
+    totalMatches?: number;
+    matchesWon?: number;
+    totalEarnings?: number;
 };
 
 export type UserRegistration = {
@@ -83,7 +92,7 @@ export const testimonials: Testimonial[] = [
     name: 'SniperQueen',
     quote: 'The app is so slick and easy to use. Found a match, registered, and won all in one evening. Highly recommended!',
     winHistory: 'Total Winnings: ₹12,500',
-    avatar: 'https://placehold.co/100x100/333333/FF69B4.png?text=S',
+    avatar: '/img/profile_snipper_queen.png',
   },
   {
     name: 'ClutchGod',

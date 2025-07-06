@@ -14,7 +14,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useToast } from '@/hooks/use-toast';
 import { auth, db } from '@/lib/firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { Loader2 } from 'lucide-react';
 
 const registerSchema = z.object({
@@ -50,7 +50,13 @@ export default function RegisterPage() {
         email: data.email,
         gameId: data.gameId,
         teamName: data.teamName,
-        status: 'active', // Set default status
+        status: 'active',
+        bio: 'New challenger in the Arena!',
+        joinedOn: serverTimestamp(),
+        totalMatches: 0,
+        matchesWon: 0,
+        totalEarnings: 0,
+        photoURL: '',
       });
 
       toast({
