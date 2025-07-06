@@ -122,10 +122,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <AdminSidebar onLogout={handleLogout} />
             <div className="flex flex-1 flex-col">
                 <header className="flex h-14 items-center justify-between gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 lg:h-[60px] lg:px-6 sticky top-0 z-30">
-                    <div className="flex items-center gap-2 md:hidden">
-                        <SidebarTrigger><Menu className="h-6 w-6" /></SidebarTrigger>
-                    </div>
-                    <div className="hidden md:flex items-center gap-2">
+                    <div className="flex items-center gap-2">
+                        <SidebarTrigger className="md:hidden"><Menu className="h-6 w-6" /></SidebarTrigger>
                         <h1 className="text-lg font-bold text-primary">Admin Panel</h1>
                     </div>
                     <div className="flex items-center gap-2">
