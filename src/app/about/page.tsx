@@ -46,7 +46,7 @@ export default function AboutPage() {
                      <div>
                         <Image 
                             src="https://placehold.co/600x400.png"
-                            data-ai-hint="esports team"
+                            data-ai-hint="gaming community"
                             alt="Our Team"
                             width={600}
                             height={400}
