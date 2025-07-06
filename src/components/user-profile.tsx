@@ -17,6 +17,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
 import { PubgIcon } from './icons/pubg-icon';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { Badge } from './ui/badge';
 
 function StatCard({ title, value, children }: { title: string; value: string | number; children: React.ReactNode }) {
     return (
@@ -129,13 +130,6 @@ export function UserProfile() {
     
     const winRate = (profile.totalMatches ?? 0) > 0 ? (((profile.matchesWon ?? 0) / profile.totalMatches!) * 100).toFixed(1) + '%' : '0%';
     
-    const mockTournamentHistory = registrations.map(reg => ({
-        ...reg,
-        placement: Math.random() > 0.5 ? 'Winner' : 'Top 10',
-        winnings: Math.random() > 0.5 ? Math.floor(Math.random() * 5000) + 1000 : Math.floor(Math.random() * 500),
-        date: reg.registeredAt ? format(reg.registeredAt.toDate(), 'MMM yyyy') : 'N/A'
-    }));
-
     return (
         <div className="space-y-6 max-w-7xl mx-auto text-foreground">
              <div className="flex justify-between items-center">
@@ -226,21 +220,22 @@ export function UserProfile() {
                 </div>
                 <div className="lg:col-span-3 space-y-6">
                     <Card className="bg-card/80">
-                        <CardHeader><CardTitle>Tournament History</CardTitle></CardHeader>
+                        <CardHeader><CardTitle>My Registrations</CardTitle></CardHeader>
                         <CardContent>
                            <div className="space-y-4">
-                            {mockTournamentHistory.length > 0 ? mockTournamentHistory.slice(0, 5).map(reg => (
-                               <div key={reg.id} className="flex items-center justify-between hover:bg-muted/50 p-2 rounded-md">
+                            {registrations.length > 0 ? registrations.slice(0, 5).map(reg => (
+                               <div key={reg.id} className="flex items-center justify-between hover:bg-muted/50 p-2 rounded-md transition-colors">
                                     <div>
                                         <p className="font-bold">{reg.tournamentTitle}</p>
-                                        <p className="text-sm text-muted-foreground">{reg.placement}</p>
+                                        <p className="text-sm text-muted-foreground">
+                                            Registered on {reg.registeredAt ? format(reg.registeredAt.toDate(), 'PPP') : 'Date not available'}
+                                        </p>
                                     </div>
-                                    <div className="text-right">
-                                        <p className="font-semibold text-primary">₹{reg.winnings.toLocaleString()}</p>
-                                        <p className="text-xs text-muted-foreground">{reg.date}</p>
-                                    </div>
+                                    <Badge variant={reg.paymentStatus === 'Confirmed' ? 'success' : 'warning'}>
+                                        {reg.paymentStatus}
+                                    </Badge>
                                </div>
-                            )) : <p className="text-muted-foreground text-center py-4">No tournament history yet.</p>}
+                            )) : <p className="text-muted-foreground text-center py-4">You haven't registered for any tournaments yet.</p>}
                            </div>
                         </CardContent>
                     </Card>
