@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { auth } from '@/lib/firebase';
 import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
-import { Loader2, LayoutDashboard, Users, Trophy, DollarSign, Award, Settings, LogOut, ClipboardList, MessageSquare } from 'lucide-react';
+import { Loader2, LayoutDashboard, Users, Trophy, DollarSign, Award, Settings, LogOut, ClipboardList, MessageSquare, Menu } from 'lucide-react';
 import { SidebarProvider, Sidebar, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarHeader, SidebarFooter, SidebarTrigger, useSidebar } from '@/components/ui/sidebar';
 import Link from 'next/link';
 import { ThemeToggle } from '@/components/theme-toggle';
@@ -26,7 +26,7 @@ function AdminSidebar({ onLogout }: { onLogout: () => Promise<void> }) {
     }
     
     return (
-        <Sidebar side="right">
+        <Sidebar>
             <SidebarHeader>
                 <h2 className="text-xl font-bold text-primary px-4">BattleBucks</h2>
             </SidebarHeader>
@@ -123,7 +123,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <div className="flex flex-1 flex-col">
                 <header className="flex h-14 items-center justify-between gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 lg:h-[60px] lg:px-6 sticky top-0 z-30">
                     <div className="flex items-center gap-2 md:hidden">
-                        <SidebarTrigger />
+                        <SidebarTrigger><Menu className="h-6 w-6" /></SidebarTrigger>
                     </div>
                     <div className="hidden md:flex items-center gap-2">
                         <h1 className="text-lg font-bold text-primary">Admin Panel</h1>
@@ -131,7 +131,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     <div className="flex items-center gap-2">
                         <span className="text-sm text-muted-foreground hidden md:inline">Welcome, Admin!</span>
                         <ThemeToggle />
-                        <SidebarTrigger className="hidden md:flex" />
+                        <SidebarTrigger className="hidden md:flex"><Menu className="h-6 w-6" /></SidebarTrigger>
                     </div>
                 </header>
                 <main className="flex-1 p-4 md:p-8 overflow-auto bg-muted/40">
