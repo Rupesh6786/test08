@@ -45,12 +45,12 @@ export default function AboutPage() {
                     </div>
                      <div>
                         <Image 
-                            src="https://placehold.co/600x400.png"
+                            src="/img/media_about_section.png"
                             data-ai-hint="gaming community"
                             alt="Our Team"
                             width={600}
                             height={400}
-                            className="rounded-lg shadow-lg"
+                            className="rounded-lg shadow-lg object-cover"
                         />
                     </div>
                 </div>
