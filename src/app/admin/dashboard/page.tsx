@@ -179,7 +179,7 @@ export default function AdminDashboardPage() {
                         <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
                         <DollarSign className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
-                    <CardContent><div className="text-2xl font-bold">₹{stats.totalRevenue.toLocaleString()}</div></CardContent>
+                    <CardContent><div className="text-xl md:text-2xl font-bold">₹{stats.totalRevenue.toLocaleString()}</div></CardContent>
                 </Card>
             </Link>
             <Link href="/admin/users">
@@ -188,7 +188,7 @@ export default function AdminDashboardPage() {
                         <CardTitle className="text-sm font-medium">Total Players</CardTitle>
                         <Users className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
-                    <CardContent><div className="text-2xl font-bold">{stats.totalPlayers}</div></CardContent>
+                    <CardContent><div className="text-xl md:text-2xl font-bold">{stats.totalPlayers}</div></CardContent>
                 </Card>
             </Link>
             <Link href="/admin/matches/create">
@@ -197,7 +197,7 @@ export default function AdminDashboardPage() {
                         <CardTitle className="text-sm font-medium">Live Tournaments</CardTitle>
                         <Trophy className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
-                    <CardContent><div className="text-2xl font-bold">{stats.liveTournaments}</div></CardContent>
+                    <CardContent><div className="text-xl md:text-2xl font-bold">{stats.liveTournaments}</div></CardContent>
                 </Card>
             </Link>
              <Card>
@@ -206,7 +206,7 @@ export default function AdminDashboardPage() {
                     <Award className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">SniperQueen</div>
+                    <div className="text-xl md:text-2xl font-bold">SniperQueen</div>
                     <p className="text-xs text-muted-foreground">in Free Fire Frenzy</p>
                 </CardContent>
             </Card>
@@ -225,9 +225,9 @@ export default function AdminDashboardPage() {
                 <TableHeader>
                     <TableRow>
                     <TableHead>Tournament</TableHead>
-                    <TableHead>User Email</TableHead>
-                    <TableHead>Game ID</TableHead>
-                    <TableHead>Payment Status</TableHead>
+                    <TableHead className="hidden md:table-cell">User Email</TableHead>
+                    <TableHead className="hidden sm:table-cell">Game ID</TableHead>
+                    <TableHead>Status</TableHead>
                     <TableHead className="text-right">Action</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -240,8 +240,8 @@ export default function AdminDashboardPage() {
                     registrations.slice(0, 5).map(reg => ( // Show recent 5
                         <TableRow key={reg.id}>
                         <TableCell className="font-medium">{reg.tournamentTitle}</TableCell>
-                        <TableCell>{reg.userEmail}</TableCell>
-                        <TableCell>{reg.gameId}</TableCell>
+                        <TableCell className="hidden md:table-cell">{reg.userEmail}</TableCell>
+                        <TableCell className="hidden sm:table-cell">{reg.gameId}</TableCell>
                         <TableCell>{reg.paymentStatus}</TableCell>
                         <TableCell className="text-right">
                             {reg.paymentStatus === 'Pending' ? (
