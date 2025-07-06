@@ -1,11 +1,11 @@
-
 "use client";
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { onAuthStateChanged, signOut, type User as FirebaseUser } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { auth, db } from '@/lib/firebase';
+import { doc, onSnapshot, type Unsubscribe } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -19,6 +19,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useRouter } from 'next/navigation';
 import { ThemeToggle } from '../theme-toggle';
 import { cn } from '@/lib/utils';
+import type { UserProfileData } from '@/lib/data';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -32,13 +33,39 @@ const navLinks = [
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [authUser, setAuthUser] = useState<FirebaseUser | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfileData | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    let firestoreUnsubscribe: Unsubscribe | null = null;
+
+    const authUnsubscribe = onAuthStateChanged(auth, (user) => {
       setAuthUser(user);
+
+      if (firestoreUnsubscribe) {
+        firestoreUnsubscribe();
+      }
+
+      if (user) {
+        const userDocRef = doc(db, 'users', user.uid);
+        firestoreUnsubscribe = onSnapshot(userDocRef, (docSnap) => {
+          if (docSnap.exists()) {
+            setUserProfile(docSnap.data() as UserProfileData);
+          } else {
+            setUserProfile(null);
+          }
+        });
+      } else {
+        setUserProfile(null);
+      }
     });
-    return () => unsubscribe();
+
+    return () => {
+      authUnsubscribe();
+      if (firestoreUnsubscribe) {
+        firestoreUnsubscribe();
+      }
+    };
   }, []);
 
   const handleLogout = async () => {
@@ -46,10 +73,23 @@ export function Header() {
     router.push('/');
   };
   
-  const getInitials = (email: string | null | undefined) => {
-    if (!email) return '';
-    return email.charAt(0).toUpperCase();
+  const getInitials = () => {
+    const name = userProfile?.name;
+    const email = authUser?.email;
+    if (name) {
+      const parts = name.split(' ').filter(Boolean);
+      if (parts.length > 1 && parts[0] && parts[parts.length - 1]) {
+        return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+      }
+      return name.substring(0, 2).toUpperCase();
+    }
+    if (email) {
+      return email.charAt(0).toUpperCase();
+    }
+    return 'U';
   }
+  
+  const photoURL = userProfile?.photoURL || authUser?.photoURL;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -73,15 +113,15 @@ export function Header() {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                   <Avatar className="h-9 w-9">
-                    <AvatarImage src={authUser.photoURL || ''} alt="User Avatar" />
-                    <AvatarFallback>{getInitials(authUser.email)}</AvatarFallback>
+                    <AvatarImage src={photoURL || ''} alt="User Avatar" />
+                    <AvatarFallback>{getInitials()}</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">My Account</p>
+                    <p className="text-sm font-medium leading-none">{userProfile?.name || 'My Account'}</p>
                     <p className="text-xs leading-none text-muted-foreground">
                       {authUser.email}
                     </p>
