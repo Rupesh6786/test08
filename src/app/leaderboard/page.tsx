@@ -26,7 +26,7 @@ import { cn } from '@/lib/utils';
 
 function PlayerHoverCard({ player }: { player: LeaderboardEntry }) {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 p-4">
       <div className="flex items-center gap-4">
         <Image
           src={player.avatar}
@@ -144,34 +144,47 @@ export default function LeaderboardPage() {
               {/* Mobile View */}
               <div className="space-y-4 md:hidden">
                 {(leaderboard as LeaderboardEntry[]).map((entry) => (
-                  <Card key={entry.rank} className="bg-card/80 backdrop-blur-sm border-border/50">
-                    <CardContent className="p-4 flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 flex-shrink-0 text-center">{getRankIcon(entry.rank)}</div>
-                        <Image src={entry.avatar} alt={entry.username} width={48} height={48} className="rounded-full border-2 border-accent" />
-                        <div>
-                          <p className="text-lg font-bold text-foreground">{entry.username}</p>
-                          <p className="text-sm text-muted-foreground font-mono">{entry.clanName}</p>
-                        </div>
-                      </div>
-                      <div className="text-right flex-shrink-0 ml-4 space-y-2">
-                         <div>
-                           <p className="text-primary text-lg font-bold">₹{entry.totalWinnings.toLocaleString()}</p>
-                           <p className="text-xs text-muted-foreground">Winnings</p>
-                         </div>
-                         <div className="flex gap-4 justify-end">
-                            <div className="text-center">
-                              <p className="font-bold text-foreground">🔥 {entry.streak}</p>
-                              <p className="text-xs text-muted-foreground">Streak</p>
+                  <Tooltip key={entry.rank} delayDuration={100}>
+                    <TooltipTrigger asChild>
+                      <Card className="bg-card/80 backdrop-blur-sm border-border/50 text-left w-full">
+                        <CardContent className="p-4">
+                            <div className="flex items-center justify-between gap-4 mb-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-8 text-center">{getRankIcon(entry.rank)}</div>
+                                    <Image src={entry.avatar} alt={entry.username} width={48} height={48} className="rounded-full border-2 border-accent" />
+                                    <div>
+                                    <p className="text-lg font-bold text-foreground">{entry.username}</p>
+                                    <p className="text-sm text-muted-foreground font-mono">{entry.clanName}</p>
+                                    </div>
+                                </div>
+                                <div className="text-right flex-shrink-0">
+                                    <p className="text-primary text-lg font-bold">₹{entry.totalWinnings.toLocaleString()}</p>
+                                    <p className="text-xs text-muted-foreground">Winnings</p>
+                                </div>
                             </div>
-                            <div className="text-center">
-                              <p className="font-bold text-foreground">{calculateWinRate(entry.wins, entry.gamesPlayed)}</p>
-                              <p className="text-xs text-muted-foreground">Win Rate</p>
+                            <div className="grid grid-cols-3 gap-2 text-center border-t border-border/50 pt-4">
+                                <div>
+                                    <p className="font-bold text-foreground">{entry.gamesPlayed}</p>
+                                    <p className="text-xs text-muted-foreground">Games</p>
+                                </div>
+                                <div>
+                                    <p className="font-bold text-foreground flex items-center justify-center gap-1">
+                                        <Flame className="w-4 h-4 text-destructive"/> {entry.streak}
+                                    </p>
+                                    <p className="text-xs text-muted-foreground">Streak</p>
+                                </div>
+                                <div>
+                                    <p className="font-bold text-foreground">{calculateWinRate(entry.wins, entry.gamesPlayed)}</p>
+                                    <p className="text-xs text-muted-foreground">Win Rate</p>
+                                </div>
                             </div>
-                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                        </CardContent>
+                      </Card>
+                    </TooltipTrigger>
+                    <TooltipContent className="bg-card/90 backdrop-blur-sm p-0 border-accent shadow-accent/20 shadow-lg w-[calc(100vw-2rem)] max-w-sm">
+                      <PlayerHoverCard player={entry} />
+                    </TooltipContent>
+                  </Tooltip>
                 ))}
               </div>
 
