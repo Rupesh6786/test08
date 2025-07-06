@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { leaderboard } from '@/lib/data.json';
 import { Header } from '@/components/layout/header';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { ArrowLeft, Trophy, DollarSign, Twitter, Instagram, Calendar, Gamepad2 } from 'lucide-react';
 import { format } from 'date-fns';
 import type { LeaderboardEntry } from '@/lib/data';
@@ -29,10 +30,10 @@ export default function PlayerProfilePage({ params }: { params: { username: stri
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <Header />
-      <main className="flex-1">
-        <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[calc(100vh-4rem)]">
+      <main className="flex-1 flex items-center justify-center py-12 px-4">
+        <Card className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-5 gap-0 overflow-hidden bg-card/80 backdrop-blur-sm border-border/50 shadow-lg">
           {/* Left side: Image */}
-          <div className="relative h-full hidden lg:block">
+          <div className="lg:col-span-2 relative aspect-[3/2] lg:aspect-auto">
             <Image
               src={player.avatar}
               alt={player.username}
@@ -43,18 +44,7 @@ export default function PlayerProfilePage({ params }: { params: { username: stri
           </div>
           
           {/* Right side: Details */}
-          <div className="flex flex-col justify-center p-8 md:p-16">
-            
-            <div className="lg:hidden mb-8">
-              <Image
-                src={player.avatar}
-                alt={player.username}
-                width={150}
-                height={150}
-                className="object-cover rounded-full border-4 border-primary mx-auto"
-              />
-            </div>
-
+          <div className="lg:col-span-3 flex flex-col justify-center p-8 md:p-12 lg:p-16">
             <div className="text-center lg:text-left">
                 <h1 className="font-headline text-4xl md:text-6xl font-bold uppercase tracking-wider text-primary text-shadow-primary">
                 {player.username}
@@ -97,7 +87,7 @@ export default function PlayerProfilePage({ params }: { params: { username: stri
               </Button>
             </div>
           </div>
-        </div>
+        </Card>
       </main>
     </div>
   );
