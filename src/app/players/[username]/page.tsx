@@ -30,44 +30,45 @@ export default function PlayerProfilePage({ params }: { params: { username: stri
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <Header />
-      <main className="flex-1 flex items-center justify-center py-12 px-4">
-        <Card className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-5 gap-0 overflow-hidden bg-card/80 backdrop-blur-sm border-border/50 shadow-lg">
-          {/* Left side: Image */}
-          <div className="lg:col-span-2 relative aspect-[3/2] lg:aspect-auto">
-            <Image
+      <main className="flex-1 flex items-center justify-center py-8 md:py-12 px-4">
+        <Card className="w-full max-w-lg lg:max-w-4xl grid grid-cols-1 lg:grid-cols-2 gap-0 overflow-hidden bg-card/80 backdrop-blur-sm border-border/50 shadow-lg rounded-xl">
+          
+          {/* Left Side: Image + Overlay Info */}
+          <div className="relative aspect-square lg:aspect-auto">
+             <Image
               src={player.avatar}
               alt={player.username}
               fill
               className="object-cover"
               priority
             />
+            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 p-6 text-white">
+                <h1 className="font-headline text-4xl md:text-5xl font-bold uppercase tracking-wider" style={{ textShadow: '0 0 10px hsl(var(--primary))' }}>
+                    {player.username}
+                </h1>
+                <p className="text-white/90 text-lg italic mt-2">"{player.bio}"</p>
+            </div>
           </div>
           
-          {/* Right side: Details */}
-          <div className="lg:col-span-3 flex flex-col justify-center p-8 md:p-12 lg:p-16">
-            <div className="text-center lg:text-left">
-                <h1 className="font-headline text-4xl md:text-6xl font-bold uppercase tracking-wider text-primary text-shadow-primary">
-                {player.username}
-                </h1>
-                <p className="text-muted-foreground text-lg italic mt-2">"{player.bio}"</p>
-            </div>
-            
-            <div className="my-8 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
+          {/* Right Side: Stats and Actions */}
+          <div className="flex flex-col justify-center p-6 md:p-8">
+            <div className="my-6 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
               {stats.map((stat, index) => (
                 <div key={index} className="flex items-center gap-4">
                   <div className="p-3 bg-primary/20 rounded-md">
-                    <stat.icon className="w-6 h-6 text-primary" />
+                    <stat.icon className="w-5 h-5 text-primary" />
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">{stat.label}</p>
-                    <p className="text-xl font-bold text-foreground">{stat.value}</p>
+                    <p className="text-lg font-bold text-foreground">{stat.value}</p>
                   </div>
                 </div>
               ))}
             </div>
 
             {(player.socialLinks.twitter || player.socialLinks.instagram) && (
-              <div className="flex items-center justify-center lg:justify-start gap-6 pt-4 border-t border-border/50">
+              <div className="flex items-center justify-start gap-6 py-4 border-t border-border/50">
                 {player.socialLinks.twitter && (
                   <Link href={player.socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
                     <Twitter className="w-5 h-5" /> Twitter
@@ -81,7 +82,7 @@ export default function PlayerProfilePage({ params }: { params: { username: stri
               </div>
             )}
 
-            <div className="text-center lg:text-left mt-12">
+            <div className="mt-6">
               <Button asChild variant="outline" size="lg">
                 <Link href="/leaderboard"><ArrowLeft className="mr-2" /> Back to Leaderboard</Link>
               </Button>
