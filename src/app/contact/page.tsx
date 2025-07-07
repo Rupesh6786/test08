@@ -90,19 +90,23 @@ export default function ContactPage() {
                                 <div className="space-y-4">
                                     <Card className="bg-card/90 backdrop-blur-sm">
                                         <CardContent className="p-6 flex items-center gap-4">
-                                            <Mail className="w-8 h-8 text-primary"/>
+                                            <div className="p-3 bg-primary/20 rounded-full flex items-center justify-center">
+                                                <Mail className="w-6 h-6 text-primary"/>
+                                            </div>
                                             <div>
                                                 <h3 className="font-bold">Email Us</h3>
-                                                <a href="mailto:22rupeshthakur@gmail.com" className="text-muted-foreground hover:text-primary">22rupeshthakur@gmail.com</a>
+                                                <a href="mailto:22rupeshthakur@gmail.com" className="text-muted-foreground hover:text-primary break-all">22rupeshthakur@gmail.com</a>
                                             </div>
                                         </CardContent>
                                     </Card>
                                     <Card className="bg-card/90 backdrop-blur-sm">
                                         <CardContent className="p-6 flex items-center gap-4">
-                                            <Phone className="w-8 h-8 text-primary"/>
+                                             <div className="p-3 bg-primary/20 rounded-full flex items-center justify-center">
+                                                <Phone className="w-6 h-6 text-primary"/>
+                                            </div>
                                             <div>
                                                 <h3 className="font-bold">Call Us</h3>
-                                                <p className="text-muted-foreground">+91 9321738137</p>
+                                                <a href="tel:+919321738137" className="text-muted-foreground hover:text-primary">+91 9321738137</a>
                                             </div>
                                         </CardContent>
                                     </Card>
