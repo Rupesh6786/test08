@@ -182,52 +182,93 @@ export default function AdminRegistrationsPage() {
 
             <Card>
                 <CardContent className="p-0">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Tournament</TableHead>
-                                <TableHead>User Email</TableHead>
-                                <TableHead>Game ID</TableHead>
-                                <TableHead>UPI ID</TableHead>
-                                <TableHead className="text-center">Status</TableHead>
-                                <TableHead className="text-right">Action</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {isLoading ? (
-                                <TableRow><TableCell colSpan={6} className="text-center h-24"><Loader2 className="w-6 h-6 animate-spin mx-auto" /></TableCell></TableRow>
-                            ) : filteredRegistrations.length > 0 ? (
-                                filteredRegistrations.map(reg => (
-                                    <TableRow key={reg.id}>
-                                        <TableCell className="font-medium">{reg.tournamentTitle}</TableCell>
-                                        <TableCell>{reg.userEmail}</TableCell>
-                                        <TableCell className="font-mono">{reg.gameId}</TableCell>
-                                        <TableCell className="font-mono">{reg.upiId}</TableCell>
-                                        <TableCell className="text-center">
-                                            <Badge variant={reg.paymentStatus === 'Confirmed' ? 'success' : 'secondary'}>
-                                                {reg.paymentStatus}
-                                            </Badge>
-                                        </TableCell>
-                                        <TableCell className="text-right">
-                                            {reg.paymentStatus === 'Pending' ? (
-                                                <Button size="sm" onClick={() => handleConfirmPayment(reg)}>
-                                                    Confirm Payment
-                                                </Button>
-                                            ) : (
-                                                <Button variant="secondary" size="sm" onClick={() => handleMarkAsPending(reg)}>
-                                                    Mark as Unpaid
-                                                </Button>
-                                            )}
-                                        </TableCell>
-                                    </TableRow>
-                                ))
-                            ) : (
+                    {/* Desktop Table View */}
+                    <div className="hidden md:block">
+                        <Table>
+                            <TableHeader>
                                 <TableRow>
-                                    <TableCell colSpan={6} className="text-center h-24">No registrations found.</TableCell>
+                                    <TableHead>Tournament</TableHead>
+                                    <TableHead>User Email</TableHead>
+                                    <TableHead>Game ID</TableHead>
+                                    <TableHead>UPI ID</TableHead>
+                                    <TableHead className="text-center">Status</TableHead>
+                                    <TableHead className="text-right">Action</TableHead>
                                 </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
+                            </TableHeader>
+                            <TableBody>
+                                {isLoading ? (
+                                    <TableRow><TableCell colSpan={6} className="text-center h-24"><Loader2 className="w-6 h-6 animate-spin mx-auto" /></TableCell></TableRow>
+                                ) : filteredRegistrations.length > 0 ? (
+                                    filteredRegistrations.map(reg => (
+                                        <TableRow key={reg.id}>
+                                            <TableCell className="font-medium">{reg.tournamentTitle}</TableCell>
+                                            <TableCell>{reg.userEmail}</TableCell>
+                                            <TableCell className="font-mono">{reg.gameId}</TableCell>
+                                            <TableCell className="font-mono">{reg.upiId}</TableCell>
+                                            <TableCell className="text-center">
+                                                <Badge variant={reg.paymentStatus === 'Confirmed' ? 'success' : 'secondary'}>
+                                                    {reg.paymentStatus}
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell className="text-right">
+                                                {reg.paymentStatus === 'Pending' ? (
+                                                    <Button size="sm" onClick={() => handleConfirmPayment(reg)}>
+                                                        Confirm Payment
+                                                    </Button>
+                                                ) : (
+                                                    <Button variant="secondary" size="sm" onClick={() => handleMarkAsPending(reg)}>
+                                                        Mark as Unpaid
+                                                    </Button>
+                                                )}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                ) : (
+                                    <TableRow>
+                                        <TableCell colSpan={6} className="text-center h-24">No registrations found.</TableCell>
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                        </Table>
+                    </div>
+
+                    {/* Mobile Card View */}
+                    <div className="md:hidden">
+                        {isLoading ? (
+                            <div className="flex justify-center items-center h-24">
+                                <Loader2 className="w-6 h-6 animate-spin mx-auto" />
+                            </div>
+                        ) : filteredRegistrations.length > 0 ? (
+                            <div className="space-y-4 p-4">
+                                {filteredRegistrations.map(reg => (
+                                    <div key={reg.id} className="p-4 bg-muted/50 rounded-lg border">
+                                        <div className="flex justify-between items-start gap-4">
+                                            <div>
+                                                <p className="font-bold">{reg.tournamentTitle}</p>
+                                                <p className="text-sm text-muted-foreground">{reg.userEmail}</p>
+                                            </div>
+                                            <Badge variant={reg.paymentStatus === 'Confirmed' ? 'success' : 'secondary'} className="shrink-0">{reg.paymentStatus}</Badge>
+                                        </div>
+                                        <div className="mt-2 text-sm text-muted-foreground font-mono">
+                                            <p>Game ID: {reg.gameId}</p>
+                                            <p>UPI ID: {reg.upiId}</p>
+                                        </div>
+                                        <div className="mt-4 pt-4 border-t border-border/20 flex justify-end">
+                                            {reg.paymentStatus === 'Pending' ? (
+                                                <Button size="sm" onClick={() => handleConfirmPayment(reg)}>Confirm Payment</Button>
+                                            ) : (
+                                                <Button variant="secondary" size="sm" onClick={() => handleMarkAsPending(reg)}>Mark as Unpaid</Button>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="flex justify-center items-center h-24">
+                                <p className="text-muted-foreground">No registrations found.</p>
+                            </div>
+                        )}
+                    </div>
                 </CardContent>
             </Card>
         </div>

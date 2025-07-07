@@ -80,51 +80,93 @@ export default function AdminInquiriesPage() {
 
             <Card>
                 <CardContent className="p-0">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="hidden md:table-cell">Date</TableHead>
-                                <TableHead>Name</TableHead>
-                                <TableHead className="hidden sm:table-cell">Email</TableHead>
-                                <TableHead>Message</TableHead>
-                                <TableHead className="text-center">Status</TableHead>
-                                <TableHead className="text-right">Action</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {isLoading ? (
-                                <TableRow><TableCell colSpan={6} className="text-center h-24"><Loader2 className="w-6 h-6 animate-spin mx-auto" /></TableCell></TableRow>
-                            ) : filteredInquiries.length > 0 ? (
-                                filteredInquiries.map(inquiry => (
-                                    <TableRow key={inquiry.id}>
-                                        <TableCell className="hidden font-mono text-xs md:table-cell">
-                                            {inquiry.submittedAt ? format(inquiry.submittedAt.toDate(), 'PPpp') : 'N/A'}
-                                        </TableCell>
-                                        <TableCell className="font-medium">{inquiry.name}</TableCell>
-                                        <TableCell className="hidden sm:table-cell">{inquiry.email}</TableCell>
-                                        <TableCell className="max-w-[150px] sm:max-w-xs truncate">{inquiry.message}</TableCell>
-                                        <TableCell className="text-center">
-                                            <Badge variant={inquiry.status === 'Read' ? 'secondary' : 'success'}>
-                                                {inquiry.status}
-                                            </Badge>
-                                        </TableCell>
-                                        <TableCell className="text-right">
-                                           {inquiry.status === 'New' && (
-                                                <Button size="sm" variant="outline" onClick={() => handleMarkAsRead(inquiry.id)}>
-                                                    <MailCheck className="mr-0 h-4 w-4 md:mr-2" />
-                                                    <span className="hidden md:inline">Mark Read</span>
-                                                </Button>
-                                           )}
-                                        </TableCell>
-                                    </TableRow>
-                                ))
-                            ) : (
+                    {/* Desktop Table View */}
+                    <div className="hidden md:block">
+                        <Table>
+                            <TableHeader>
                                 <TableRow>
-                                    <TableCell colSpan={6} className="text-center h-24">No inquiries found.</TableCell>
+                                    <TableHead className="hidden md:table-cell">Date</TableHead>
+                                    <TableHead>Name</TableHead>
+                                    <TableHead className="hidden sm:table-cell">Email</TableHead>
+                                    <TableHead>Message</TableHead>
+                                    <TableHead className="text-center">Status</TableHead>
+                                    <TableHead className="text-right">Action</TableHead>
                                 </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
+                            </TableHeader>
+                            <TableBody>
+                                {isLoading ? (
+                                    <TableRow><TableCell colSpan={6} className="text-center h-24"><Loader2 className="w-6 h-6 animate-spin mx-auto" /></TableCell></TableRow>
+                                ) : filteredInquiries.length > 0 ? (
+                                    filteredInquiries.map(inquiry => (
+                                        <TableRow key={inquiry.id}>
+                                            <TableCell className="hidden font-mono text-xs md:table-cell">
+                                                {inquiry.submittedAt ? format(inquiry.submittedAt.toDate(), 'PPpp') : 'N/A'}
+                                            </TableCell>
+                                            <TableCell className="font-medium">{inquiry.name}</TableCell>
+                                            <TableCell className="hidden sm:table-cell">{inquiry.email}</TableCell>
+                                            <TableCell className="max-w-[150px] sm:max-w-xs truncate">{inquiry.message}</TableCell>
+                                            <TableCell className="text-center">
+                                                <Badge variant={inquiry.status === 'Read' ? 'secondary' : 'success'}>
+                                                    {inquiry.status}
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell className="text-right">
+                                            {inquiry.status === 'New' && (
+                                                    <Button size="sm" variant="outline" onClick={() => handleMarkAsRead(inquiry.id)}>
+                                                        <MailCheck className="mr-0 h-4 w-4 md:mr-2" />
+                                                        <span className="hidden md:inline">Mark Read</span>
+                                                    </Button>
+                                            )}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                ) : (
+                                    <TableRow>
+                                        <TableCell colSpan={6} className="text-center h-24">No inquiries found.</TableCell>
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                        </Table>
+                    </div>
+
+                    {/* Mobile Card View */}
+                    <div className="md:hidden">
+                        {isLoading ? (
+                            <div className="flex justify-center items-center h-24">
+                                <Loader2 className="w-6 h-6 animate-spin" />
+                            </div>
+                        ) : filteredInquiries.length > 0 ? (
+                            <div className="space-y-4 p-4">
+                                {filteredInquiries.map(inquiry => (
+                                    <div key={inquiry.id} className="p-4 bg-muted/50 rounded-lg border">
+                                        <div className="flex justify-between items-start gap-4">
+                                            <div>
+                                                <p className="font-bold">{inquiry.name}</p>
+                                                <p className="text-sm text-muted-foreground">{inquiry.email}</p>
+                                                <p className="text-xs text-muted-foreground font-mono mt-1">
+                                                    {inquiry.submittedAt ? format(inquiry.submittedAt.toDate(), 'PPp') : 'N/A'}
+                                                </p>
+                                            </div>
+                                            <Badge variant={inquiry.status === 'Read' ? 'secondary' : 'success'} className="shrink-0 capitalize">{inquiry.status}</Badge>
+                                        </div>
+                                        <p className="mt-4 text-sm bg-background/50 p-3 rounded-md">{inquiry.message}</p>
+                                        {inquiry.status === 'New' && (
+                                            <div className="mt-4 pt-4 border-t border-border/20 flex justify-end">
+                                                <Button size="sm" variant="outline" onClick={() => handleMarkAsRead(inquiry.id)}>
+                                                    <MailCheck className="mr-2 h-4 w-4" />
+                                                    Mark as Read
+                                                </Button>
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                             <div className="flex justify-center items-center h-24">
+                                <p className="text-muted-foreground">No inquiries found.</p>
+                            </div>
+                        )}
+                    </div>
                 </CardContent>
             </Card>
         </div>
