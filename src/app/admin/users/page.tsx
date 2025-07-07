@@ -123,65 +123,118 @@ export default function AdminUsersPage() {
       </div>
       <Card>
         <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Team Name</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredUsers.length > 0 ? (
+          {/* Desktop Table View */}
+          <div className="hidden md:block">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Team Name</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredUsers.length > 0 ? (
+                  filteredUsers.map(user => (
+                    <TableRow key={user.uid}>
+                      <TableCell className="font-medium">{user.name}</TableCell>
+                      <TableCell>{user.email}</TableCell>
+                      <TableCell>{user.teamName}</TableCell>
+                      <TableCell>
+                        <Badge variant={user.status === 'banned' ? 'destructive' : 'success'}>
+                          {user.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right space-x-1">
+                        <Button variant="ghost" size="icon"><Eye className="w-4 h-4" /></Button>
+                        {user.status === 'active' ? (
+                          <Button variant="ghost" size="icon" onClick={() => handleStatusChange(user.uid, 'banned')}>
+                            <UserX className="w-4 h-4" />
+                          </Button>
+                        ) : (
+                          <Button variant="ghost" size="icon" onClick={() => handleStatusChange(user.uid, 'active')}>
+                            <UserCheck className="w-4 h-4" />
+                          </Button>
+                        )}
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                             <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive"><Trash2 className="w-4 h-4" /></Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This action cannot be undone. This will permanently delete the user's
+                                data from the database.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction onClick={() => handleDeleteUser(user.uid)}>Continue</AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow><TableCell colSpan={5} className="text-center h-24">No users found.</TableCell></TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+          {/* Mobile Card View */}
+          <div className="space-y-4 p-4 md:hidden">
+            {filteredUsers.length > 0 ? (
                 filteredUsers.map(user => (
-                  <TableRow key={user.uid}>
-                    <TableCell className="font-medium">{user.name}</TableCell>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>{user.teamName}</TableCell>
-                    <TableCell>
-                      <Badge variant={user.status === 'banned' ? 'destructive' : 'success'}>
-                        {user.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right space-x-1">
-                      <Button variant="ghost" size="icon"><Eye className="w-4 h-4" /></Button>
-                      {user.status === 'active' ? (
-                        <Button variant="ghost" size="icon" onClick={() => handleStatusChange(user.uid, 'banned')}>
-                          <UserX className="w-4 h-4" />
-                        </Button>
-                      ) : (
-                        <Button variant="ghost" size="icon" onClick={() => handleStatusChange(user.uid, 'active')}>
-                          <UserCheck className="w-4 h-4" />
-                        </Button>
-                      )}
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                           <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive"><Trash2 className="w-4 h-4" /></Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              This action cannot be undone. This will permanently delete the user's
-                              data from the database.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDeleteUser(user.uid)}>Continue</AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </TableCell>
-                  </TableRow>
+                    <div key={user.uid} className="p-4 bg-muted/50 rounded-lg border">
+                        <div className="flex justify-between items-start gap-4">
+                            <div>
+                                <p className="font-bold">{user.name}</p>
+                                <p className="text-sm text-muted-foreground">{user.email}</p>
+                                <p className="text-xs text-muted-foreground">Team: {user.teamName}</p>
+                            </div>
+                            <Badge variant={user.status === 'banned' ? 'destructive' : 'success'} className="shrink-0 capitalize">{user.status}</Badge>
+                        </div>
+                        <div className="mt-4 pt-4 border-t border-border/20 flex justify-end space-x-1">
+                            <Button variant="ghost" size="icon"><Eye className="w-4 h-4" /></Button>
+                             {user.status === 'active' ? (
+                                <Button variant="ghost" size="icon" onClick={() => handleStatusChange(user.uid, 'banned')}>
+                                <UserX className="w-4 h-4" />
+                                </Button>
+                            ) : (
+                                <Button variant="ghost" size="icon" onClick={() => handleStatusChange(user.uid, 'active')}>
+                                <UserCheck className="w-4 h-4" />
+                                </Button>
+                            )}
+                             <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive"><Trash2 className="w-4 h-4" /></Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            This will permanently delete the user's data.
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                        <AlertDialogAction onClick={() => handleDeleteUser(user.uid)}>Continue</AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                        </div>
+                    </div>
                 ))
-              ) : (
-                <TableRow><TableCell colSpan={5} className="text-center h-24">No users found.</TableCell></TableRow>
-              )}
-            </TableBody>
-          </Table>
+            ) : (
+              <div className="text-center h-24 flex items-center justify-center">
+                  <p className="text-muted-foreground">No users found.</p>
+              </div>
+            )}
+          </div>
         </CardContent>
       </Card>
     </div>
