@@ -16,7 +16,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { auth, db } from '@/lib/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
 import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -58,6 +58,11 @@ export function MatchRegistrationForm({ tournamentTitle, tournamentId }: { tourn
 
         setIsSubmitting(true);
         try {
+            // Fetch user's name from Firestore
+            const userDocRef = doc(db, 'users', user.uid);
+            const userDocSnap = await getDoc(userDocRef);
+            const userName = userDocSnap.exists() ? userDocSnap.data().name : user.email; // Fallback to email
+
             await addDoc(collection(db, "registrations"), {
                 userId: user.uid,
                 userEmail: user.email,
@@ -71,7 +76,23 @@ export function MatchRegistrationForm({ tournamentTitle, tournamentId }: { tourn
             });
     
             const phoneNumber = '919321738137';
-            const message = `I have successfully registered for the '${tournamentTitle}' tournament. My UPI ID is ${data.upiId}, my Game ID is ${data.gameId}, and my Team Name is ${data.teamName}. Please confirm my registration.`;
+            const message = `Subject: ${tournamentTitle} – Registration Confirmation
+
+Hello Team,
+
+I have successfully registered for the ${tournamentTitle} tournament. Please find my registration details below:
+
+Player Name: ${userName}
+Game ID: ${data.gameId}
+Team Name: ${data.teamName}
+UPI ID for Payment: ${data.upiId}
+
+Kindly confirm my registration at your earliest convenience.
+
+Thank you!
+Best regards,
+${userName}`;
+
             const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
             
             window.open(whatsappUrl, '_blank');
