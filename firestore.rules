@@ -1,4 +1,3 @@
-
 rules_version = '2';
 
 service cloud.firestore {
@@ -11,7 +10,7 @@ service cloud.firestore {
 
     // Rules for the 'users' collection.
     match /users/{userId} {
-      // Anyone can read a user's profile to allow for public player searching.
+      // Anyone can read a user's profile.
       allow read: if true;
       // Only the user themselves can create or update their own profile.
       allow create, update: if request.auth.uid == userId;

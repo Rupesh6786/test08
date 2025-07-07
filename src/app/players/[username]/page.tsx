@@ -24,27 +24,34 @@ export default function PlayerProfilePage() {
         setIsLoading(true);
         setError(false);
         try {
+            // Fetch user profile first
             const usersRef = collection(db, 'users');
             const q = query(usersRef, where("name", "==", name), limit(1));
             const querySnapshot = await getDocs(q);
 
             if (querySnapshot.empty) {
                 setError(true);
-                setPlayer(null);
-                setRegistrations([]);
-            } else {
-                const userDoc = querySnapshot.docs[0];
-                const userData = userDoc.data() as UserProfileData;
-                setPlayer(userData);
+                return; // Exit early if player is not found
+            }
+            
+            const userDoc = querySnapshot.docs[0];
+            const userData = userDoc.data() as UserProfileData;
+            setPlayer(userData);
 
-                // Fetch registrations for this player
+            // Now, try to fetch registrations. This may fail due to permissions
+            // for non-owners, but we won't let it crash the page.
+            try {
                 const regRef = collection(db, 'registrations');
                 const regQ = query(regRef, where('userId', '==', userDoc.id));
                 const regSnapshot = await getDocs(regQ);
                 const fetchedRegistrations = regSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as UserRegistration[];
                 fetchedRegistrations.sort((a, b) => a.registeredAt && b.registeredAt ? b.registeredAt.toMillis() - a.registeredAt.toMillis() : 0);
                 setRegistrations(fetchedRegistrations);
+            } catch (regError) {
+                console.warn("Could not fetch registrations for this user (likely due to permissions). Displaying profile without them.", regError);
+                setRegistrations([]); // Set to empty array on failure
             }
+
         } catch (err) {
             console.error("Error fetching player data:", err);
             setError(true);
