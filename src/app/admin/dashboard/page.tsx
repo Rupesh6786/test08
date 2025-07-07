@@ -11,7 +11,6 @@ import { Loader2, Users, Trophy, DollarSign, Award, CheckCircle, XCircle } from 
 import { useToast } from '@/hooks/use-toast';
 import type { Tournament } from '@/lib/data';
 import Link from 'next/link';
-import { generateConfirmationEmail } from '@/ai/flows/generate-confirmation-email';
 
 type Registration = {
     id: string; // Firestore document ID
@@ -118,17 +117,11 @@ export default function AdminDashboardPage() {
         const userName = userSnap.exists() ? userSnap.data().name : registration.userEmail;
 
         if (tournament && userName) {
-            const emailContent = await generateConfirmationEmail({
-                userName: userName,
-                tournamentTitle: tournament.title,
-                matchDate: tournament.date,
-                matchTime: tournament.time,
-                entryFee: tournament.entryFee,
-                prizePool: tournament.prizePool,
-            });
-
-            const mailtoLink = `mailto:${registration.userEmail}?subject=${encodeURIComponent(emailContent.subject)}&body=${encodeURIComponent(emailContent.body)}`;
-            window.open(mailtoLink, '_blank');
+            const subject = `Registration Confirmed: ${tournament.title}`;
+            const body = `Hi ${userName},\n\nCongratulations! Your registration for the "${tournament.title}" tournament is confirmed.\n\nMatch Details:\n- Date: ${tournament.date}\n- Time: ${tournament.time}\n- Entry Fee Paid: ₹${tournament.entryFee}\n\nWe're excited to see you in the arena! The total prize pool is ₹${tournament.prizePool.toLocaleString()}.\n\nGood luck!\n\nThe BattleBucks Team`;
+            
+            const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${registration.userEmail}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.open(gmailUrl, '_blank');
         }
 
 
