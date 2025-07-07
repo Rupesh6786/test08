@@ -88,6 +88,16 @@ export type Community = {
   game: 'PUBG' | 'Free Fire' | 'All';
   creatorId: string;
   createdAt: Timestamp;
+  memberIds: string[];
+};
+
+export type CommunityMessage = {
+  id: string;
+  text: string;
+  createdAt: Timestamp;
+  userId: string;
+  userName: string;
+  userAvatar?: string;
 };
 
 

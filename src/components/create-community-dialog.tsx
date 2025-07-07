@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -80,6 +81,7 @@ export function CreateCommunityDialog({ isOpen, setIsOpen, onCommunityCreated }:
                 members: 1,
                 createdAt: serverTimestamp(),
                 game: 'All', // Default game
+                memberIds: [user.uid],
             });
 
             toast({ title: "Success", description: `Community "${data.name}" created.` });
