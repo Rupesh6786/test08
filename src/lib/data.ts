@@ -101,7 +101,7 @@ export const testimonials: Testimonial[] = [
     name: 'SniperQueen',
     quote: 'The app is so slick and easy to use. Found a match, registered, and won all in one evening. Highly recommended!',
     winHistory: 'Total Winnings: ₹12,500',
-    avatar: '/img/profile_snipper_queen.png',
+    avatar: 'https://placehold.co/100x100/333333/7CFC00.png?text=S',
   },
   {
     name: 'ClutchGod',
