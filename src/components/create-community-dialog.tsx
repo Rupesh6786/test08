@@ -30,10 +30,10 @@ interface CreateCommunityDialogProps {
 }
 
 const communityIcons = [
-    '/community_icons/icon-1.png',
-    '/community_icons/icon-2.png',
-    '/community_icons/icon-3.png',
-    '/community_icons/icon-4.png',
+    '/community_icons/icons_battle_seeker.png',
+    '/community_icons/icons_frag_masters.png',
+    '/community_icons/icons_the_rangers.png',
+    '/community_icons/icons_warrior_kingdom.png',
 ];
 
 export function CreateCommunityDialog({ isOpen, setIsOpen, onCommunityCreated }: CreateCommunityDialogProps) {

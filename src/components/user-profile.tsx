@@ -11,6 +11,7 @@ import type { UserProfileData, UserRegistration } from '@/lib/data';
 import { Button } from './ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { PlayerProfileDisplay } from './player-profile-display';
+import { EditProfileDialog } from './edit-profile-dialog';
 
 export function UserProfile() {
     const [authUser, setAuthUser] = useState<User | null>(null);
@@ -20,6 +21,7 @@ export function UserProfile() {
     const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const { toast } = useToast();
+    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
     useEffect(() => {
         const fetchUserData = async (uid: string) => {
@@ -89,6 +91,28 @@ export function UserProfile() {
             setIsUploading(false);
         }
     };
+
+    const handleProfileUpdate = async (data: Partial<UserProfileData>) => {
+        if (!authUser) {
+            toast({ title: "Error", description: "You must be logged in.", variant: "destructive" });
+            return;
+        }
+        
+        try {
+            const userDocRef = doc(db, 'users', authUser.uid);
+            await updateDoc(userDocRef, data);
+            
+            if (data.name && data.name !== authUser.displayName) {
+                await updateProfile(authUser, { displayName: data.name });
+            }
+
+            setProfile(prev => prev ? { ...prev, ...data } : null);
+            toast({ title: "Success", description: "Your profile has been updated." });
+        } catch (error) {
+            console.error("Error updating profile:", error);
+            toast({ title: "Error", description: "Failed to update profile.", variant: "destructive" });
+        }
+    };
     
     if (isLoading) {
         return <div className="flex items-center justify-center py-20"><Loader2 className="h-16 w-16 animate-spin text-primary" /></div>;
@@ -105,13 +129,22 @@ export function UserProfile() {
     }
     
     return (
-        <PlayerProfileDisplay
-            profile={profile}
-            registrations={registrations}
-            isCurrentUser={true}
-            isUploading={isUploading}
-            handleFileChange={handleFileChange}
-            fileInputRef={fileInputRef}
-        />
+        <>
+            <PlayerProfileDisplay
+                profile={profile}
+                registrations={registrations}
+                isCurrentUser={true}
+                isUploading={isUploading}
+                handleFileChange={handleFileChange}
+                fileInputRef={fileInputRef}
+                onEditClick={() => setIsEditDialogOpen(true)}
+            />
+            <EditProfileDialog
+                isOpen={isEditDialogOpen}
+                setIsOpen={setIsEditDialogOpen}
+                profile={profile}
+                onSave={handleProfileUpdate}
+            />
+        </>
     );
 }

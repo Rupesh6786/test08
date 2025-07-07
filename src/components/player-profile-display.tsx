@@ -10,6 +10,7 @@ import { Input } from './ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
 import { PubgIcon } from './icons/pubg-icon';
+import { FreeFireIcon } from './icons/freefire-icon';
 import { LineChart, Line, Tooltip, ResponsiveContainer } from 'recharts';
 import { Badge } from './ui/badge';
 import { Separator } from './ui/separator';
@@ -38,6 +39,7 @@ interface PlayerProfileDisplayProps {
     isUploading?: boolean;
     handleFileChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
     fileInputRef?: React.RefObject<HTMLInputElement>;
+    onEditClick?: () => void;
 }
 
 export function PlayerProfileDisplay({ 
@@ -46,7 +48,8 @@ export function PlayerProfileDisplay({
     isCurrentUser = false,
     isUploading = false,
     handleFileChange,
-    fileInputRef
+    fileInputRef,
+    onEditClick
 }: PlayerProfileDisplayProps) {
 
     const winRate = (profile.totalMatches ?? 0) > 0 ? (((profile.matchesWon ?? 0) / profile.totalMatches!) * 100).toFixed(1) + '%' : '0%';
@@ -57,6 +60,17 @@ export function PlayerProfileDisplay({
         }
     }
 
+    const GameIcon = () => {
+        switch (profile.preferredGame) {
+            case 'PUBG':
+                return <PubgIcon className="w-8 h-8 text-primary" />;
+            case 'Free Fire':
+                return <FreeFireIcon className="w-8 h-8 text-primary" />;
+            default:
+                return <Gamepad2 className="w-8 h-8 text-primary" />;
+        }
+    };
+
     return (
         <div className="space-y-6 max-w-7xl mx-auto text-foreground">
              {isCurrentUser && (
@@ -64,7 +78,7 @@ export function PlayerProfileDisplay({
                     <Link href="/" className="flex items-center space-x-2">
                         <span className="text-2xl font-bold tracking-wider text-primary font-headline">BATTLEBUCKS</span>
                     </Link>
-                    <Button variant="ghost" size="icon"><Settings className="w-6 h-6" /></Button>
+                    <Button variant="ghost" size="icon" onClick={onEditClick}><Settings className="w-6 h-6" /></Button>
                 </div>
              )}
 
@@ -128,10 +142,10 @@ export function PlayerProfileDisplay({
                         <CardContent className="space-y-4">
                              <div className="flex justify-between p-3 bg-muted rounded-lg">
                                 <div className="flex items-center gap-3">
-                                    <PubgIcon className="w-8 h-8" />
+                                    <GameIcon />
                                     <div>
-                                        <div className="text-xs text-muted-foreground">Favorite Game</div>
-                                        <div className="font-bold">PUBG</div>
+                                        <div className="text-xs text-muted-foreground">Preferred Game</div>
+                                        <div className="font-bold">{profile.preferredGame || 'Not Set'}</div>
                                     </div>
                                 </div>
                              </div>
