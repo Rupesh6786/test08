@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -12,7 +13,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useToast } from '@/hooks/use-toast';
 import { auth, db } from '@/lib/firebase';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { Loader2, ImagePlus } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const communitySchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters').max(30, 'Name cannot be longer than 30 characters'),
@@ -27,11 +29,16 @@ interface CreateCommunityDialogProps {
   onCommunityCreated: () => void;
 }
 
+const communityIcons = [
+    '/community_icons/icon-1.png',
+    '/community_icons/icon-2.png',
+    '/community_icons/icon-3.png',
+    '/community_icons/icon-4.png',
+];
+
 export function CreateCommunityDialog({ isOpen, setIsOpen, onCommunityCreated }: CreateCommunityDialogProps) {
     const [isSaving, setIsSaving] = useState(false);
-    const [avatarFile, setAvatarFile] = useState<File | null>(null);
-    const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
     const { toast } = useToast();
 
     const form = useForm<CommunityFormValues>({
@@ -39,18 +46,9 @@ export function CreateCommunityDialog({ isOpen, setIsOpen, onCommunityCreated }:
         defaultValues: { name: '', description: '' },
     });
     
-    const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            setAvatarFile(file);
-            setAvatarPreview(URL.createObjectURL(file));
-        }
-    };
-
     const resetForm = () => {
         form.reset();
-        setAvatarFile(null);
-        setAvatarPreview(null);
+        setSelectedAvatar(null);
     }
     
     const handleOpenChange = (open: boolean) => {
@@ -66,31 +64,18 @@ export function CreateCommunityDialog({ isOpen, setIsOpen, onCommunityCreated }:
             toast({ title: "Error", description: "You must be logged in to create a community.", variant: "destructive" });
             return;
         }
-        if (!avatarFile) {
-            toast({ title: "Error", description: "Please upload an avatar for the community.", variant: "destructive" });
+        if (!selectedAvatar) {
+            toast({ title: "Error", description: "Please select a community icon.", variant: "destructive" });
             return;
         }
         
         setIsSaving(true);
         
-        let avatarUrl = '';
         try {
-            // 1. Upload image
-            const formData = new FormData();
-            formData.append('file', avatarFile);
-            const uploadResponse = await fetch('/api/upload', {
-                method: 'POST',
-                body: formData,
-            });
-            if (!uploadResponse.ok) throw new Error('Avatar upload failed');
-            const { path } = await uploadResponse.json();
-            avatarUrl = path;
-
-            // 2. Create community in Firestore
             await addDoc(collection(db, "communities"), {
                 name: data.name,
                 description: data.description,
-                avatar: avatarUrl,
+                avatar: selectedAvatar,
                 creatorId: user.uid,
                 members: 1,
                 createdAt: serverTimestamp(),
@@ -111,7 +96,7 @@ export function CreateCommunityDialog({ isOpen, setIsOpen, onCommunityCreated }:
 
     return (
         <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="sm:max-w-md">
             <DialogHeader>
               <DialogTitle>Create a new Community</DialogTitle>
               <DialogDescription>
@@ -119,17 +104,33 @@ export function CreateCommunityDialog({ isOpen, setIsOpen, onCommunityCreated }:
               </DialogDescription>
             </DialogHeader>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                    <div className="flex justify-center">
-                        <input type="file" ref={fileInputRef} onChange={handleAvatarChange} accept="image/png, image/jpeg" className="hidden" />
-                        <button type="button" onClick={() => fileInputRef.current?.click()} className="relative w-24 h-24 rounded-full border-2 border-dashed flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-colors">
-                            {avatarPreview ? (
-                                <img src={avatarPreview} alt="Avatar preview" className="w-full h-full rounded-full object-cover" />
-                            ) : (
-                                <ImagePlus className="w-8 h-8"/>
-                            )}
-                        </button>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                     <div>
+                        <FormLabel>Choose an Icon</FormLabel>
+                        <div className="grid grid-cols-4 gap-4 mt-2">
+                            {communityIcons.map((icon) => (
+                                <button 
+                                    key={icon}
+                                    type="button"
+                                    onClick={() => setSelectedAvatar(icon)}
+                                    className={cn(
+                                        "rounded-lg p-1 border-2 transition-all",
+                                        selectedAvatar === icon ? 'border-primary ring-2 ring-primary' : 'border-transparent hover:border-primary/50'
+                                    )}
+                                    disabled={isSaving}
+                                >
+                                    <Image
+                                        src={icon}
+                                        alt={`Community icon`}
+                                        width={80}
+                                        height={80}
+                                        className="rounded-md aspect-square object-cover"
+                                    />
+                                </button>
+                            ))}
+                        </div>
                     </div>
+
                     <FormField
                         control={form.control}
                         name="name"
