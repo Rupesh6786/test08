@@ -84,7 +84,7 @@ export function PlayerProfileDisplay({
 
             <div className="flex flex-col md:flex-row items-center gap-6">
                 <div 
-                    className={`relative group w-32 h-32 md:w-40 md:h-40 flex-shrink-0 ${isCurrentUser ? 'cursor-pointer' : ''}`}
+                    className={`relative group w-28 h-28 md:w-40 md:h-40 flex-shrink-0 ${isCurrentUser ? 'cursor-pointer' : ''}`}
                     onClick={onAvatarClick}
                 >
                     <Avatar className="w-full h-full rounded-lg border-4 border-primary/50">
@@ -112,7 +112,7 @@ export function PlayerProfileDisplay({
                         {profile.name}
                         <Check className="w-7 h-7 text-blue-500 fill-current bg-white rounded-full p-1" />
                     </h1>
-                    <p className="text-muted-foreground mt-1">{profile.bio || 'New challenger in the Arena!'}</p>
+                    <p className="text-muted-foreground mt-1 max-w-prose">{profile.bio || 'New challenger in the Arena!'}</p>
                     <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-2 sm:gap-4 mt-2 text-muted-foreground">
                         <p className="text-sm flex items-center gap-2">
                             <Users className="w-4 h-4" />
@@ -177,14 +177,14 @@ export function PlayerProfileDisplay({
                         <CardContent>
                            <div className="space-y-4">
                             {registrations.length > 0 ? registrations.map(reg => (
-                               <div key={reg.id} className="flex items-center justify-between hover:bg-muted/50 p-2 rounded-md transition-colors">
-                                    <div>
+                               <div key={reg.id} className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between hover:bg-muted/50 p-3 rounded-md transition-colors w-full">
+                                    <div className="flex-grow">
                                         <p className="font-bold">{reg.tournamentTitle}</p>
                                         <p className="text-sm text-muted-foreground">
                                             Registered on {reg.registeredAt ? format(reg.registeredAt.toDate(), 'PPP') : 'Date not available'}
                                         </p>
                                     </div>
-                                    <Badge variant={reg.paymentStatus === 'Confirmed' ? 'success' : 'warning'}>
+                                    <Badge variant={reg.paymentStatus === 'Confirmed' ? 'success' : 'warning'} className="self-start sm:self-center">
                                         {reg.paymentStatus}
                                     </Badge>
                                </div>
@@ -205,7 +205,7 @@ export function PlayerProfileDisplay({
                                    <div className="text-sm text-muted-foreground">Following</div>
                                </div>
                            </div>
-                           <div className="flex gap-4">
+                           <div className="flex flex-col sm:flex-row gap-4">
                                 <Button className="w-full"><UserPlus className="mr-2"/>Add Friend</Button>
                                 <Button variant="secondary" className="w-full"><MessageSquare className="mr-2"/>Send Message</Button>
                            </div>
