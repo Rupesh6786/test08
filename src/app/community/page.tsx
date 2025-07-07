@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -135,7 +134,7 @@ export default function CommunityPage() {
                             <h1 className="font-headline text-4xl md:text-5xl font-bold uppercase tracking-wider text-primary text-shadow-primary">
                                 Community Hub
                             </h1>
-                            <p className="text-lg text-muted-foreground mt-2">Find players and communities.</p>
+                            <p className="text-lg text-muted-foreground mt-2">Find players, join communities, and grow your network.</p>
                         </div>
                         
                         <Tabs defaultValue="communities" className="w-full">
