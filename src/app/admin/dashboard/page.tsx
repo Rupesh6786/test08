@@ -6,14 +6,16 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { auth, db } from '@/lib/firebase';
-import { collection, getDocs, query, orderBy, doc, updateDoc, where, runTransaction, increment } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, doc, updateDoc, where, runTransaction, increment, getDoc } from 'firebase/firestore';
 import { Loader2, Users, Trophy, DollarSign, Award, CheckCircle, XCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import type { Tournament } from '@/lib/data';
 import Link from 'next/link';
+import { generateConfirmationEmail } from '@/ai/flows/generate-confirmation-email';
 
 type Registration = {
     id: string; // Firestore document ID
+    userId: string;
     tournamentId: string;
     tournamentTitle: string;
     userEmail: string;
@@ -24,6 +26,7 @@ type Registration = {
 
 export default function AdminDashboardPage() {
   const [registrations, setRegistrations] = useState<Registration[]>([]);
+  const [allTournaments, setAllTournaments] = useState<Tournament[]>([]);
   const [stats, setStats] = useState({
     totalPlayers: 0,
     liveTournaments: 0,
@@ -41,7 +44,8 @@ export default function AdminDashboardPage() {
 
           // Fetch tournaments to calculate revenue and live count
           const tournamentsSnapshot = await getDocs(collection(db, 'tournaments'));
-          const allTournaments = tournamentsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data()})) as Tournament[];
+          const fetchedTournaments = tournamentsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data()})) as Tournament[];
+          setAllTournaments(fetchedTournaments);
           
           // Fetch registrations for revenue and recent activity
           const regQuery = query(collection(db, 'registrations'), orderBy('registeredAt', 'desc'));
@@ -53,11 +57,11 @@ export default function AdminDashboardPage() {
           setRegistrations(fetchedRegistrations);
           
           // Calculate stats
-          const liveTournaments = allTournaments.filter(t => t.status === 'Ongoing').length;
+          const liveTournaments = fetchedTournaments.filter(t => t.status === 'Ongoing').length;
           
           const confirmedRegistrations = fetchedRegistrations.filter(r => r.paymentStatus === 'Confirmed');
           const totalRevenue = confirmedRegistrations.reduce((acc, reg) => {
-              const tournament = allTournaments.find(t => t.id === reg.tournamentId);
+              const tournament = fetchedTournaments.find(t => t.id === reg.tournamentId);
               return acc + (tournament?.entryFee || 0);
           }, 0);
 
@@ -79,8 +83,8 @@ export default function AdminDashboardPage() {
     fetchDashboardData();
   }, []);
 
-  const handleConfirmPayment = async (registrationId: string, tournamentId: string) => {
-      if (!tournamentId || typeof tournamentId !== 'string') {
+  const handleConfirmPayment = async (registration: Registration) => {
+      if (!registration.tournamentId || typeof registration.tournamentId !== 'string') {
           toast({
               title: "Error",
               description: "This registration has an invalid or missing tournament ID.",
@@ -89,8 +93,8 @@ export default function AdminDashboardPage() {
           return;
       }
 
-      const registrationRef = doc(db, 'registrations', registrationId);
-      const tournamentRef = doc(db, 'tournaments', tournamentId);
+      const registrationRef = doc(db, 'registrations', registration.id);
+      const tournamentRef = doc(db, 'tournaments', registration.tournamentId);
       try {
           await runTransaction(db, async (transaction) => {
             const tournamentDoc = await transaction.get(tournamentRef);
@@ -106,12 +110,33 @@ export default function AdminDashboardPage() {
             transaction.update(registrationRef, { paymentStatus: 'Confirmed' });
             transaction.update(tournamentRef, { slotsAllotted: increment(1) });
         });
+        
+        // Draft confirmation email
+        const tournament = allTournaments.find(t => t.id === registration.tournamentId);
+        const userRef = doc(db, 'users', registration.userId);
+        const userSnap = await getDoc(userRef);
+        const userName = userSnap.exists() ? userSnap.data().name : registration.userEmail;
+
+        if (tournament && userName) {
+            const emailContent = await generateConfirmationEmail({
+                userName: userName,
+                tournamentTitle: tournament.title,
+                matchDate: tournament.date,
+                matchTime: tournament.time,
+                entryFee: tournament.entryFee,
+                prizePool: tournament.prizePool,
+            });
+
+            const mailtoLink = `mailto:${registration.userEmail}?subject=${encodeURIComponent(emailContent.subject)}&body=${encodeURIComponent(emailContent.body)}`;
+            window.open(mailtoLink, '_blank');
+        }
+
 
         // Re-fetch to update stats and list
         await fetchDashboardData();
         toast({
             title: "Success",
-            description: "Payment confirmed and slot secured.",
+            description: "Payment confirmed. An email draft has been opened.",
             action: <CheckCircle className="h-5 w-5 text-green-500" />
         })
       } catch (error: any) {
@@ -130,8 +155,8 @@ export default function AdminDashboardPage() {
       }
   };
 
-  const handleMarkAsPending = async (registrationId: string, tournamentId: string) => {
-    if (!tournamentId || typeof tournamentId !== 'string') {
+  const handleMarkAsPending = async (registration: Registration) => {
+    if (!registration.tournamentId || typeof registration.tournamentId !== 'string') {
         toast({
             title: "Error",
             description: "This registration has an invalid or missing tournament ID.",
@@ -139,8 +164,8 @@ export default function AdminDashboardPage() {
         });
         return;
     }
-    const registrationRef = doc(db, 'registrations', registrationId);
-    const tournamentRef = doc(db, 'tournaments', tournamentId);
+    const registrationRef = doc(db, 'registrations', registration.id);
+    const tournamentRef = doc(db, 'tournaments', registration.tournamentId);
     try {
         await runTransaction(db, async (transaction) => {
             transaction.update(registrationRef, { paymentStatus: 'Pending' });
@@ -245,9 +270,9 @@ export default function AdminDashboardPage() {
                         <TableCell>{reg.paymentStatus}</TableCell>
                         <TableCell className="text-right">
                             {reg.paymentStatus === 'Pending' ? (
-                                <Button variant="ghost" size="sm" onClick={() => handleConfirmPayment(reg.id, reg.tournamentId)}>Confirm</Button>
+                                <Button variant="ghost" size="sm" onClick={() => handleConfirmPayment(reg)}>Confirm</Button>
                             ) : (
-                                <Button variant="ghost" size="sm" onClick={() => handleMarkAsPending(reg.id, reg.tournamentId)}>Mark Unpaid</Button>
+                                <Button variant="ghost" size="sm" onClick={() => handleMarkAsPending(reg)}>Mark Unpaid</Button>
                             )}
                         </TableCell>
                         </TableRow>
