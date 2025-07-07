@@ -80,7 +80,7 @@ export default function CommunityDetailPage() {
 
   useEffect(() => {
     if (community && authUser) {
-      setIsMember(community.memberIds.includes(authUser.uid));
+      setIsMember(community.memberIds && community.memberIds.includes(authUser.uid));
     } else {
       setIsMember(false);
     }
@@ -110,7 +110,7 @@ export default function CommunityDetailPage() {
   }, [messages]);
 
   const fetchMembers = async (memberIds: string[]) => {
-    if (memberIds.length === 0) {
+    if (!memberIds || memberIds.length === 0) {
         setMembers([]);
         return;
     };
