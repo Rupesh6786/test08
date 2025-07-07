@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from 'react';
-import { notFound, useParams } from 'next/navigation';
+import { notFound, useParams, useRouter } from 'next/navigation';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -38,6 +38,7 @@ import Link from 'next/link';
 export default function CommunityDetailPage() {
   const params = useParams<{ id: string }>();
   const communityId = params.id;
+  const router = useRouter();
   const { toast } = useToast();
 
   const [community, setCommunity] = useState<Community | null>(null);
@@ -49,18 +50,33 @@ export default function CommunityDetailPage() {
   const [isMember, setIsMember] = useState(false);
 
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [isActionLoading, setIsActionLoading] = useState(false);
 
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
+  // Checks for authenticated user, redirects to login if not found.
   useEffect(() => {
-    if (communityId) {
+    const authUnsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setAuthUser(user);
+      } else {
+        router.push('/login');
+      }
+      setIsAuthLoading(false);
+    });
+    return () => authUnsubscribe();
+  }, [router]);
+
+  // Fetches community data only if the user is authenticated.
+  useEffect(() => {
+    if (communityId && authUser) {
       const communityRef = doc(db, 'communities', communityId);
       const unsubscribeCommunity = onSnapshot(communityRef, (docSnap) => {
         if (docSnap.exists()) {
           const data = { id: docSnap.id, ...docSnap.data() } as Community;
           setCommunity(data);
-          fetchMembers(data.memberIds);
+          fetchMembers(data.memberIds || []);
         } else {
           notFound();
         }
@@ -69,15 +85,8 @@ export default function CommunityDetailPage() {
 
       return () => unsubscribeCommunity();
     }
-  }, [communityId]);
+  }, [communityId, authUser]);
   
-  useEffect(() => {
-    const authUnsubscribe = onAuthStateChanged(auth, (user) => {
-      setAuthUser(user);
-    });
-    return () => authUnsubscribe();
-  }, []);
-
   useEffect(() => {
     if (community && authUser) {
       setIsMember(community.memberIds && community.memberIds.includes(authUser.uid));
@@ -174,12 +183,12 @@ export default function CommunityDetailPage() {
     }
   };
 
-  if (isLoading) {
+  if (isAuthLoading || isLoading) {
     return <div className="flex min-h-screen items-center justify-center"><Loader2 className="h-16 w-16 animate-spin text-primary" /></div>;
   }
 
   if (!community) {
-    notFound();
+    return notFound();
   }
 
   return (
@@ -199,14 +208,10 @@ export default function CommunityDetailPage() {
                         <p className="text-muted-foreground">{community.description}</p>
                     </div>
                     <div>
-                        {authUser ? (
-                            <Button onClick={handleJoinLeave} disabled={isActionLoading}>
-                                {isActionLoading ? <Loader2 className="animate-spin" /> : (isMember ? <LogOut /> : <UserPlus />)}
-                                {isMember ? 'Leave Community' : 'Join Community'}
-                            </Button>
-                        ) : (
-                            <Button asChild><Link href="/login"><LogIn/>Login to Join</Link></Button>
-                        )}
+                        <Button onClick={handleJoinLeave} disabled={isActionLoading}>
+                            {isActionLoading ? <Loader2 className="animate-spin" /> : (isMember ? <LogOut /> : <UserPlus />)}
+                            {isMember ? 'Leave Community' : 'Join Community'}
+                        </Button>
                     </div>
                 </CardContent>
             </Card>
