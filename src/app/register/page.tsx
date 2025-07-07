@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from 'next/link';
@@ -13,7 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { auth, db } from '@/lib/firebase';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification, signOut } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { Loader2 } from 'lucide-react';
 
@@ -43,6 +42,9 @@ export default function RegisterPage() {
       const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
       const user = userCredential.user;
 
+      // Send verification email
+      await sendEmailVerification(user);
+
       // Now store the rest of the user's data in Firestore
       await setDoc(doc(db, "users", user.uid), {
         uid: user.uid,
@@ -60,12 +62,16 @@ export default function RegisterPage() {
         photoURL: '',
       });
 
+      // Sign the user out until they verify their email
+      await signOut(auth);
+
       toast({
-        title: 'Welcome to BattleBucks!',
-        description: 'Your account has been successfully created.',
+        title: 'Account Created!',
+        description: 'A verification link has been sent to your email. Please verify to log in.',
+        duration: 8000
       });
 
-      router.push('/');
+      router.push('/login');
 
     } catch (error: any) {
       console.error("Registration failed:", error);

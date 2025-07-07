@@ -12,7 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { auth } from '@/lib/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { Loader2 } from 'lucide-react';
 
 const loginSchema = z.object({
@@ -38,6 +38,20 @@ export default function LoginPage() {
     setIsLoading(true);
     try {
       const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password);
+      
+      // Check for email verification
+      if (!userCredential.user.emailVerified && userCredential.user.uid !== ADMIN_UID) {
+        await signOut(auth);
+        toast({
+          title: 'Verification Required',
+          description: "Please check your inbox and verify your email address to log in.",
+          variant: 'destructive',
+          duration: 8000,
+        });
+        setIsLoading(false);
+        return;
+      }
+
       toast({
         title: 'Login Successful',
         description: 'Welcome back!',
