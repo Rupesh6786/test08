@@ -24,7 +24,6 @@ export default function AdminLeaderboardPage() {
     return <span className="font-bold text-md">{rank}</span>;
   }
   
-  // Filtering logic would go here if games were associated with leaderboard entries
   const filteredLeaderboard = leaderboard;
 
   return (
@@ -68,7 +67,7 @@ export default function AdminLeaderboardPage() {
                   </TableCell>
                   <TableCell className="font-medium">{entry.username}</TableCell>
                   <TableCell className="font-mono">{entry.gameId}</TableCell>
-                  <TableCell>12</TableCell> {/* Mock data */}
+                  <TableCell>12</TableCell>
                   <TableCell className="text-right font-bold text-primary">₹{entry.totalWinnings.toLocaleString()}</TableCell>
                 </TableRow>
               ))}
