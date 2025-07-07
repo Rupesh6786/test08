@@ -35,7 +35,7 @@ export default function LeaderboardPage() {
       setIsLoading(true);
       try {
         const usersRef = collection(db, 'users');
-        const q = query(usersRef, orderBy('totalEarnings', 'desc'), limit(5));
+        const q = query(usersRef, orderBy('totalEarnings', 'desc'), limit(10));
         const querySnapshot = await getDocs(q);
         const leaders = querySnapshot.docs.map(doc => doc.data() as UserProfileData);
         setLeaderboardData(leaders);
@@ -137,7 +137,7 @@ export default function LeaderboardPage() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {isLoading ? renderSkeletons(5) : leaderboardData.map((entry, index) => (
+                                {isLoading ? renderSkeletons(10) : leaderboardData.map((entry, index) => (
                                 <TableRow 
                                     key={entry.uid} 
                                     className="font-medium hover:bg-primary/10 cursor-pointer"
@@ -174,7 +174,7 @@ export default function LeaderboardPage() {
 
               {/* Mobile View */}
               <div className="space-y-4 md:hidden">
-                {isLoading ? renderMobileSkeletons(5) : leaderboardData.map((entry, index) => (
+                {isLoading ? renderMobileSkeletons(10) : leaderboardData.map((entry, index) => (
                   <Link key={entry.uid} href={`/players/${encodeURIComponent(entry.name)}`} className="block">
                       <Card className="bg-card/80 backdrop-blur-sm border-border/50 text-left w-full active:scale-95 transition-transform duration-150">
                         <CardContent className="p-4">
