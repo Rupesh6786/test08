@@ -11,6 +11,7 @@ import { Loader2, Users, Trophy, DollarSign, Award, CheckCircle, XCircle } from 
 import { useToast } from '@/hooks/use-toast';
 import type { Tournament } from '@/lib/data';
 import Link from 'next/link';
+import { Badge } from '@/components/ui/badge';
 
 type Registration = {
     id: string; // Firestore document ID
@@ -230,7 +231,7 @@ export default function AdminDashboardPage() {
             </Card>
         </div>
 
-        {/* Recent Registrations Table */}
+        {/* Recent Registrations */}
         <Card>
             <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>Recent Registrations</CardTitle>
@@ -239,40 +240,75 @@ export default function AdminDashboardPage() {
                 </Link>
             </CardHeader>
             <CardContent>
-                <Table>
-                <TableHeader>
-                    <TableRow>
-                    <TableHead>Tournament</TableHead>
-                    <TableHead className="hidden md:table-cell">User Email</TableHead>
-                    <TableHead className="hidden sm:table-cell">Game ID</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Action</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {registrations.length === 0 ? (
-                    <TableRow>
-                        <TableCell colSpan={5} className="text-center h-24">No registered users found.</TableCell>
-                    </TableRow>
-                    ) : (
-                    registrations.slice(0, 5).map(reg => ( // Show recent 5
-                        <TableRow key={reg.id}>
-                        <TableCell className="font-medium">{reg.tournamentTitle}</TableCell>
-                        <TableCell className="hidden md:table-cell">{reg.userEmail}</TableCell>
-                        <TableCell className="hidden sm:table-cell">{reg.gameId}</TableCell>
-                        <TableCell>{reg.paymentStatus}</TableCell>
-                        <TableCell className="text-right">
-                            {reg.paymentStatus === 'Pending' ? (
-                                <Button variant="ghost" size="sm" onClick={() => handleConfirmPayment(reg)}>Confirm</Button>
+                {/* Desktop Table View */}
+                <div className="hidden md:block">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Tournament</TableHead>
+                                <TableHead>User Email</TableHead>
+                                <TableHead>Game ID</TableHead>
+                                <TableHead>Status</TableHead>
+                                <TableHead className="text-right">Action</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {registrations.length === 0 ? (
+                                <TableRow>
+                                    <TableCell colSpan={5} className="text-center h-24">No registered users found.</TableCell>
+                                </TableRow>
                             ) : (
-                                <Button variant="ghost" size="sm" onClick={() => handleMarkAsPending(reg)}>Mark Unpaid</Button>
+                                registrations.slice(0, 5).map(reg => (
+                                    <TableRow key={reg.id}>
+                                        <TableCell className="font-medium">{reg.tournamentTitle}</TableCell>
+                                        <TableCell>{reg.userEmail}</TableCell>
+                                        <TableCell>{reg.gameId}</TableCell>
+                                        <TableCell>
+                                             <Badge variant={reg.paymentStatus === 'Confirmed' ? 'success' : 'warning'}>
+                                                {reg.paymentStatus}
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell className="text-right">
+                                            {reg.paymentStatus === 'Pending' ? (
+                                                <Button size="sm" onClick={() => handleConfirmPayment(reg)}>Confirm</Button>
+                                            ) : (
+                                                <Button variant="secondary" size="sm" onClick={() => handleMarkAsPending(reg)}>Mark Unpaid</Button>
+                                            )}
+                                        </TableCell>
+                                    </TableRow>
+                                ))
                             )}
-                        </TableCell>
-                        </TableRow>
-                    ))
+                        </TableBody>
+                    </Table>
+                </div>
+                {/* Mobile Card View */}
+                <div className="space-y-4 md:hidden">
+                    {registrations.length === 0 ? (
+                         <div className="text-center h-24 flex items-center justify-center">
+                            <p className="text-muted-foreground">No registered users found.</p>
+                        </div>
+                    ) : (
+                        registrations.slice(0, 5).map(reg => (
+                            <div key={reg.id} className="p-4 bg-muted/50 rounded-lg border">
+                                <div className="flex justify-between items-start gap-4">
+                                    <div>
+                                        <p className="font-bold">{reg.tournamentTitle}</p>
+                                        <p className="text-sm text-muted-foreground">{reg.userEmail}</p>
+                                        <p className="text-xs text-muted-foreground font-mono">Game ID: {reg.gameId}</p>
+                                    </div>
+                                    <Badge variant={reg.paymentStatus === 'Confirmed' ? 'success' : 'warning'} className="shrink-0">{reg.paymentStatus}</Badge>
+                                </div>
+                                <div className="mt-4 pt-4 border-t border-muted-foreground/20 flex justify-end">
+                                    {reg.paymentStatus === 'Pending' ? (
+                                        <Button size="sm" onClick={() => handleConfirmPayment(reg)}>Confirm Payment</Button>
+                                    ) : (
+                                        <Button variant="secondary" size="sm" onClick={() => handleMarkAsPending(reg)}>Mark as Unpaid</Button>
+                                    )}
+                                </div>
+                            </div>
+                        ))
                     )}
-                </TableBody>
-                </Table>
+                </div>
             </CardContent>
         </Card>
     </div>
