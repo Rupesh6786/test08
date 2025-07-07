@@ -11,7 +11,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-export const ConfirmationEmailInputSchema = z.object({
+const ConfirmationEmailInputSchema = z.object({
   userName: z.string().describe('The name of the player receiving the email.'),
   tournamentTitle: z.string().describe('The title of the tournament.'),
   matchDate: z.string().describe('The date of the match.'),
@@ -19,13 +19,13 @@ export const ConfirmationEmailInputSchema = z.object({
   entryFee: z.number().describe('The entry fee for the tournament.'),
   prizePool: z.number().describe('The prize pool for the tournament.'),
 });
-export type ConfirmationEmailInput = z.infer<typeof ConfirmationEmailInputSchema>;
+type ConfirmationEmailInput = z.infer<typeof ConfirmationEmailInputSchema>;
 
 const ConfirmationEmailOutputSchema = z.object({
   subject: z.string().describe('The subject line of the email.'),
   body: z.string().describe('The body content of the email.'),
 });
-export type ConfirmationEmailOutput = z.infer<typeof ConfirmationEmailOutputSchema>;
+type ConfirmationEmailOutput = z.infer<typeof ConfirmationEmailOutputSchema>;
 
 export async function generateConfirmationEmail(input: ConfirmationEmailInput): Promise<ConfirmationEmailOutput> {
   return generateConfirmationEmailFlow(input);
