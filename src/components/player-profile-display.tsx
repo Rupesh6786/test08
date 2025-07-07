@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Settings, Check, Play, DollarSign, Target, UserPlus, MessageSquare, Users, History, Trophy, Gamepad2, Loader2 } from 'lucide-react';
+import { Settings, Check, Flame, DollarSign, Target, UserPlus, MessageSquare, Users, History, Trophy, Gamepad2, Loader2 } from 'lucide-react';
 import type { UserProfileData, UserRegistration } from '@/lib/data';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -132,7 +132,7 @@ export function PlayerProfileDisplay({
                 <StatCard title="Matches Won" value={profile.matchesWon ?? 0}><Trophy className="w-4 h-4 text-muted-foreground"/></StatCard>
                 <StatCard title="Win Rate" value={winRate}><Target className="w-4 h-4 text-muted-foreground"/></StatCard>
                 <StatCard title="Earnings" value={`₹${(profile.totalEarnings ?? 0).toLocaleString()}`}><DollarSign className="w-4 h-4 text-muted-foreground"/></StatCard>
-                <StatCard title="Current Tier" value="147"><Play className="w-4 h-4 text-muted-foreground"/></StatCard>
+                <StatCard title="Win Streak" value={profile.streak ?? 0}><Flame className="w-4 h-4 text-muted-foreground"/></StatCard>
             </div>
             
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">

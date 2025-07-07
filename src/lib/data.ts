@@ -55,6 +55,7 @@ export type UserProfileData = {
     matchesWon?: number;
     totalEarnings?: number;
     preferredGame?: 'PUBG' | 'Free Fire' | 'Both';
+    streak?: number;
 };
 
 export type UserRegistration = {

@@ -56,6 +56,7 @@ export default function RegisterPage() {
         totalMatches: 0,
         matchesWon: 0,
         totalEarnings: 0,
+        streak: 0,
         photoURL: '',
       });
 
